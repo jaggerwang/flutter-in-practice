@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  bot_toast:
+    dependency: "direct main"
+    description:
+      name: bot_toast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   build:
     dependency: transitive
     description:
@@ -162,13 +169,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   dart_style:
     dependency: transitive
     description:
@@ -480,13 +480,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.8.1"
-  redux_thunk:
-    dependency: "direct main"
-    description:
-      name: redux_thunk
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1"
   shared_preferences:
     dependency: transitive
     description:

@@ -1,23 +1,18 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:redux_persist/redux_persist.dart';
-import 'package:redux_persist_flutter/redux_persist_flutter.dart';
 import 'package:logging/logging.dart';
 import 'package:redux/redux.dart';
-import 'package:redux_logging/redux_logging.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:redux_thunk/redux_thunk.dart';
 import 'package:injector/injector.dart';
 import 'package:package_info/package_info.dart';
 
+import 'adapter/adapter.dart';
+import 'ui/ui.dart';
+import 'usecase/usecase.dart';
 import 'config.dart';
 import 'theme.dart';
-import 'utils/utils.dart';
-import 'interfaces/interfaces.dart';
-import 'services/services.dart';
-import 'dependencies/dependencies.dart';
 
 class WgContainer {
   static WgContainer _instance;
@@ -42,15 +37,19 @@ class WgContainer {
       _config.appDocDir = await getApplicationDocumentsDirectory();
       print(_config);
 
-      _injectTheme();
+      injectTheme();
 
-      _injectLogger();
+      injectLogger();
 
-      _injectAppState();
+      injectAppState();
 
-      await _injectAppStore();
+      await injectAppStore();
 
-      _injectWgService();
+      injectService();
+
+      injectUseCase();
+
+      injectPresenter();
     });
   }
 
@@ -58,7 +57,7 @@ class WgContainer {
     return _config;
   }
 
-  void _injectTheme() {
+  void injectTheme() {
     _injector.registerSingleton<WgTheme>((injector) {
       return WgTheme();
     });
@@ -68,7 +67,7 @@ class WgContainer {
     return _injector.getDependency<WgTheme>();
   }
 
-  void _injectLogger() {
+  void injectLogger() {
     Logger.root.level = config.loggerLevel;
     Logger.root.onRecord.listen((record) {
       final label = record.loggerName.padRight(3).substring(0, 3).toUpperCase();
@@ -100,7 +99,7 @@ class WgContainer {
     return _injector.getDependency<Logger>(dependencyName: 'action');
   }
 
-  void _injectAppState() {
+  void injectAppState() {
     _injector.registerDependency<AppState>((injector) {
       return AppState(version: _config.packageInfo.version);
     });
@@ -110,48 +109,8 @@ class WgContainer {
     return _injector.getDependency<AppState>();
   }
 
-  Future<void> _injectAppStore() async {
-    var initialState = appState;
-
-    final List<Middleware<AppState>> wms = [];
-    if (config.isLogAction) {
-      wms.add(LoggingMiddleware<AppState>(logger: actionLogger));
-    }
-    wms.add(thunkMiddleware);
-
-    if (config.isPersistState) {
-      final persistor = Persistor<AppState>(
-        storage: FlutterStorage(key: _config.packageInfo.packageName),
-        serializer: JsonSerializer<AppState>((json) {
-          if (json == null) {
-            return initialState;
-          }
-          return AppState.fromJson(json);
-        }),
-        transforms: Transforms(
-          onLoad: [
-            (state) {
-              if (compareVersion(
-                      state.version, _config.packageInfo.version, 2) !=
-                  0) {
-                state = initialState;
-              }
-              return state;
-            }
-          ],
-        ),
-      );
-
-      initialState = await persistor.load();
-
-      wms.add(persistor.createMiddleware());
-    }
-
-    final store = Store<AppState>(
-      appReducer,
-      initialState: initialState,
-      middleware: wms,
-    );
+  Future<void> injectAppStore() async {
+    final store = await createStore();
 
     _injector.registerSingleton<Store<AppState>>((injector) {
       return store;
@@ -162,10 +121,10 @@ class WgContainer {
     return _injector.getDependency<Store<AppState>>();
   }
 
-  void _injectWgService() {
-    _injector.registerSingleton<IWgService>((injector) {
+  void injectService() {
+    _injector.registerSingleton<WeiguanService>((injector) {
       if (config.isMockApi) {
-        return WgServiceMock(
+        return WeiguanServiceMock(
           config: config,
           logger: apiLogger,
         );
@@ -175,7 +134,7 @@ class WgContainer {
         client.interceptors.add(CookieManager(
             PersistCookieJar(dir: '${config.appDocDir.path}/cookies')));
 
-        return WgService(
+        return WeiguanServiceImpl(
           config: config,
           logger: apiLogger,
           client: client,
@@ -184,7 +143,59 @@ class WgContainer {
     });
   }
 
-  IWgService get wgService {
-    return _injector.getDependency<IWgService>();
+  WeiguanService get weiguanService {
+    return _injector.getDependency<WeiguanService>();
+  }
+
+  void injectUseCase() {
+    _injector.registerSingleton<AccountUseCase>((injector) {
+      return AccountUseCase(weiguanService);
+    });
+
+    _injector.registerSingleton<PostUseCase>((injector) {
+      return PostUseCase(weiguanService);
+    });
+
+    _injector.registerSingleton<UserUseCase>((injector) {
+      return UserUseCase(weiguanService);
+    });
+  }
+
+  AccountUseCase get accountUseCase {
+    return _injector.getDependency<AccountUseCase>();
+  }
+
+  PostUseCase get postUseCase {
+    return _injector.getDependency<PostUseCase>();
+  }
+
+  UserUseCase get userUseCase {
+    return _injector.getDependency<UserUseCase>();
+  }
+
+  void injectPresenter() {
+    _injector.registerSingleton<AccountPresenter>((injector) {
+      return AccountPresenter(appStore, accountUseCase);
+    });
+
+    _injector.registerSingleton<PostPresenter>((injector) {
+      return PostPresenter(appStore, postUseCase);
+    });
+
+    _injector.registerSingleton<UserPresenter>((injector) {
+      return UserPresenter(appStore, userUseCase);
+    });
+  }
+
+  AccountPresenter get accountPresenter {
+    return _injector.getDependency<AccountPresenter>();
+  }
+
+  PostPresenter get postPresenter {
+    return _injector.getDependency<PostPresenter>();
+  }
+
+  UserPresenter get userPresenter {
+    return _injector.getDependency<UserPresenter>();
   }
 }

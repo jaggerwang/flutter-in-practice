@@ -2,18 +2,34 @@
 
 This project is the reference source code of online video course [叽歪课程 - Flutter 移动应用开发实战](https://blog.jaggerwang.net/jwcourse-flutter-mobile-app-develop-in-practice/), including usage demo of flutter components and a social video app weiguan like tiktok.
 
-## Screenshots
+> To students of course: 最新的实战项目目录结构已按照新版 [干净架构](https://blog.jaggerwang.net/clean-architecture-in-practice/) 进行了重构，目录结构调整较大，如想获取之前版本，可查看提交记录。
 
-<p float="left">
-  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/demo-drawer.png" width="240">
-  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/demo-lake.png" width="240">
-  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/demo-silver-app-bar.png" width="240">
-  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/demo-tab-navigation.png" width="240">
-  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/weiguan-home-1.png" width="240">
-  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/weiguan-publish.png" width="240">
-  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/weiguan-me.png" width="240">
-  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/weiguan-user.png" width="240">
-</p>
+## Dependent frameworks and packages
+
+1. [Flutter](https://flutter.dev/)
+1. [cached_network_image](https://pub.dev/packages/cached_network_image)
+1. [carousel_slider](https://pub.dev/packages/carousel_slider)
+1. [cookie_jar](https://pub.dev/packages/cookie_jar)
+1. [dio](https://pub.dev/packages/dio)
+1. [flutter_redux](https://pub.dev/packages/flutter_redux)
+1. [functional_data](https://pub.dev/packages/functional_data)
+1. [image_picker](https://pub.dev/packages/image_picker)
+1. [injector](https://pub.dev/packages/injector)
+1. [json_annotation](https://pub.dev/packages/json_annotation)
+1. [logging](https://pub.dev/packages/logging)
+1. [meta](https://pub.dev/packages/meta)
+1. [package_info](https://pub.dev/packages/package_info)
+1. [provider](https://pub.dev/packages/provider)
+1. [redux](https://pub.dev/packages/redux)
+1. [redux_logging](https://pub.dev/packages/redux_logging)
+1. [redux_persist](https://pub.dev/packages/redux_persist)
+1. [redux_persist_flutter](https://pub.dev/packages/redux_persist_flutter)
+1. [redux_thunk](https://pub.dev/packages/redux_thunk)
+1. [video_player](https://pub.dev/packages/video_player)
+1. [build_runner](https://pub.dev/packages/build_runner)
+1. [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons)
+1. [functional_data_generator](https://pub.dev/packages/functional_data_generator)
+1. [json_serializable](https://pub.dev/packages/json_serializable)
 
 ## How to run
 
@@ -89,16 +105,15 @@ void main() async {
 }
 ```
 
-## Changelog
+## Screenshots
 
-### 2019-11-03
-
-1. Upgrade Flutter SDK to v1.9.
-
-### 2019-05-25
-
-1. Upgrade Flutter SDK to v1.5.
-
-### 2019-01-14
-
-1. First release.
+<p float="left">
+  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/demo-drawer.png" width="240">
+  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/demo-lake.png" width="240">
+  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/demo-silver-app-bar.png" width="240">
+  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/demo-tab-navigation.png" width="240">
+  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/weiguan-home-1.png" width="240">
+  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/weiguan-publish.png" width="240">
+  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/weiguan-me-2.png" width="240">
+  <img src="https://jw-asset.oss-cn-shanghai.aliyuncs.com/course/flutter-in-practice/screenshot/weiguan-user.png" width="240">
+</p>
