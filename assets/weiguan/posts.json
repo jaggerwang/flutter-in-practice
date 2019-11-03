@@ -1,0 +1,61 @@
+[
+    {
+        "id": 1,
+        "userId": 1,
+        "type": "text",
+        "text": "Flutter 是 Google 在 2017 I/O 大会上推出的全新 UI 框架，目前主打移动平台，包括 Android 和 iOS，未来还会扩展到其它平台，包括桌面平台。经过一年多时间的发展，Flutter 团队于 2018/12/4 号正式释放出了 1.0 版本",
+        "imageIds": [],
+        "videoId": null,
+        "createdAt": "2019-07-24T07:24:22+00:00",
+        "updatedAt": "2019-07-24T07:24:22+00:00"
+    },
+    {
+        "id": 2,
+        "userId": 1,
+        "type": "image",
+        "text": "",
+        "imageIds": [
+            2
+        ],
+        "videoId": null,
+        "createdAt": "2019-07-24T07:24:22+00:00",
+        "updatedAt": "2019-07-24T07:24:22+00:00"
+    },
+    {
+        "id": 3,
+        "userId": 2,
+        "type": "image",
+        "text": "",
+        "imageIds": [
+            3,
+            4
+        ],
+        "videoId": null,
+        "createdAt": "2019-07-24T07:24:22+00:00",
+        "updatedAt": "2019-07-24T07:24:22+00:00"
+    },
+    {
+        "id": 4,
+        "userId": 3,
+        "type": "image",
+        "text": "",
+        "imageIds": [
+            5,
+            6,
+            7
+        ],
+        "videoId": null,
+        "createdAt": "2019-07-24T07:24:22+00:00",
+        "updatedAt": "2019-07-24T07:24:22+00:00"
+    },
+    {
+        "id": 5,
+        "userId": 1,
+        "type": "video",
+        "text": "",
+        "imageIds": [],
+        "videoId": 8,
+        "createdAt": "2019-07-24T07:24:22+00:00",
+        "updatedAt": "2019-07-24T07:24:22+00:00"
+    }
+]

@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "userId": 0,
+        "postCount": 100,
+        "likeCount": 200,
+        "followingCount": 200,
+        "followerCount": 500,
+        "createdAt": "2019-07-26T03:25:46+00:00",
+        "updatedAt": "2019-07-26T03:25:46+00:00"
+    },
+    {
+        "id": 2,
+        "userId": 0,
+        "postCount": 50,
+        "likeCount": 100,
+        "followingCount": 100,
+        "followerCount": 250,
+        "createdAt": "2019-07-26T03:25:46+00:00",
+        "updatedAt": "2019-07-26T03:25:46+00:00"
+    },
+    {
+        "id": 3,
+        "userId": 0,
+        "postCount": 200,
+        "likeCount": 400,
+        "followingCount": 400,
+        "followerCount": 1000,
+        "createdAt": "2019-07-26T03:25:46+00:00",
+        "updatedAt": "2019-07-26T03:25:46+00:00"
+    }
+]

@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "username": "jaggerwang",
+        "mobile": "18666668888",
+        "email": "jaggerwang@gmail.com",
+        "avatarId": 1,
+        "intro": "Coding for Free",
+        "createdAt": "2019-08-16T03:44:47+00:00",
+        "updatedAt": "2019-08-16T03:44:47+00:00"
+    },
+    {
+        "id": 2,
+        "username": "天火",
+        "mobile": null,
+        "email": null,
+        "avatarId": null,
+        "intro": "变形金刚",
+        "createdAt": "2019-08-16T03:44:47+00:00",
+        "updatedAt": "2019-08-16T03:44:47+00:00"
+    },
+    {
+        "id": 3,
+        "username": "灭霸",
+        "mobile": null,
+        "email": null,
+        "avatarId": null,
+        "intro": "漫威宇宙",
+        "createdAt": "2019-08-16T03:44:47+00:00",
+        "updatedAt": "2019-08-16T03:44:47+00:00"
+    }
+]
