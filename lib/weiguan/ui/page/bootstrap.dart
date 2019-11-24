@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../usecase/usecase.dart';
-import '../../util/util.dart';
 import '../../container.dart';
 
 class BootstrapPage extends StatelessWidget {
@@ -35,23 +33,16 @@ class _BodyState extends State<_Body> {
   }
 
   void _bootstrap() async {
-    final cancelLoading = showLoading();
-    try {
+    WgContainer().basePresenter.doWithLoading(() async {
       if (widget.needLogout) {
-        await Future.delayed(Duration(seconds: 1), () async {
-          await WgContainer().accountPresenter.logout();
-        });
+        await WgContainer().userPresenter.logout();
       }
 
-      final user = await WgContainer().accountPresenter.info();
+      final user = await WgContainer().userPresenter.logged();
 
-      Navigator.of(context)
-          .pushReplacementNamed(user == null ? '/login' : '/tab');
-    } on UseCaseException catch (e) {
-      showMessage('网络请求出错（${e.message}），请重启应用。');
-    } finally {
-      cancelLoading();
-    }
+      WgContainer().basePresenter.navigator().pushNamedAndRemoveUntil(
+          user == null ? '/login' : '/tab', (route) => false);
+    });
   }
 
   @override
@@ -68,7 +59,7 @@ class _BodyState extends State<_Body> {
           ),
           Spacer(),
           Text(
-            '网络请求中...',
+            '正在执行网络请求，如果出错请重启应用。',
             style: Theme.of(context)
                 .textTheme
                 .body1

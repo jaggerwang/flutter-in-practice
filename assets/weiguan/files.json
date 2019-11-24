@@ -12,10 +12,10 @@
         },
         "url": "https://static.jaggerwang.net/course/flutter-in-practice/image/avatar-1.jpg",
         "thumbs": {
-            "small": "https://static.jaggerwang.net/course/flutter-in-practice/image/avatar-1.jpg?x-oss-process=style/thumb-small",
-            "middle": "https://static.jaggerwang.net/course/flutter-in-practice/image/avatar-1.jpg?x-oss-process=style/thumb-middle",
-            "large": "https://static.jaggerwang.net/course/flutter-in-practice/image/avatar-1.jpg?x-oss-process=style/thumb-large",
-            "huge": "https://static.jaggerwang.net/course/flutter-in-practice/image/avatar-1.jpg?x-oss-process=style/thumb-huge"
+            "SMALL": "https://static.jaggerwang.net/course/flutter-in-practice/image/avatar-1.jpg?x-oss-process=style/thumb-small",
+            "MIDDLE": "https://static.jaggerwang.net/course/flutter-in-practice/image/avatar-1.jpg?x-oss-process=style/thumb-middle",
+            "LARGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/avatar-1.jpg?x-oss-process=style/thumb-large",
+            "HUGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/avatar-1.jpg?x-oss-process=style/thumb-huge"
         },
         "createdAt": "2019-07-24T07:09:28+00:00",
         "updatedAt": "2019-07-24T07:09:28+00:00"
@@ -33,10 +33,10 @@
         },
         "url": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-1.jpg",
         "thumbs": {
-            "small": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-1.jpg?x-oss-process=style/thumb-small",
-            "middle": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-1.jpg?x-oss-process=style/thumb-middle",
-            "large": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-1.jpg?x-oss-process=style/thumb-large",
-            "huge": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-1.jpg?x-oss-process=style/thumb-huge"
+            "SMALL": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-1.jpg?x-oss-process=style/thumb-small",
+            "MIDDLE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-1.jpg?x-oss-process=style/thumb-middle",
+            "LARGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-1.jpg?x-oss-process=style/thumb-large",
+            "HUGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-1.jpg?x-oss-process=style/thumb-huge"
         },
         "createdAt": "2019-07-24T07:09:28+00:00",
         "updatedAt": "2019-07-24T07:09:28+00:00"
@@ -54,10 +54,10 @@
         },
         "url": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-2.jpg",
         "thumbs": {
-            "small": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-2.jpg?x-oss-process=style/thumb-small",
-            "middle": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-2.jpg?x-oss-process=style/thumb-middle",
-            "large": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-2.jpg?x-oss-process=style/thumb-large",
-            "huge": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-2.jpg?x-oss-process=style/thumb-huge"
+            "SMALL": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-2.jpg?x-oss-process=style/thumb-small",
+            "MIDDLE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-2.jpg?x-oss-process=style/thumb-middle",
+            "LARGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-2.jpg?x-oss-process=style/thumb-large",
+            "HUGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-2.jpg?x-oss-process=style/thumb-huge"
         },
         "createdAt": "2019-07-24T07:09:28+00:00",
         "updatedAt": "2019-07-24T07:09:28+00:00"
@@ -75,10 +75,10 @@
         },
         "url": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-3.jpg",
         "thumbs": {
-            "small": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-3.jpg?x-oss-process=style/thumb-small",
-            "middle": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-3.jpg?x-oss-process=style/thumb-middle",
-            "large": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-3.jpg?x-oss-process=style/thumb-large",
-            "huge": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-3.jpg?x-oss-process=style/thumb-huge"
+            "SMALL": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-3.jpg?x-oss-process=style/thumb-small",
+            "MIDDLE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-3.jpg?x-oss-process=style/thumb-middle",
+            "LARGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-3.jpg?x-oss-process=style/thumb-large",
+            "HUGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-3.jpg?x-oss-process=style/thumb-huge"
         },
         "createdAt": "2019-07-24T07:09:28+00:00",
         "updatedAt": "2019-07-24T07:09:28+00:00"
@@ -96,10 +96,10 @@
         },
         "url": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-4.jpg",
         "thumbs": {
-            "small": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-4.jpg?x-oss-process=style/thumb-small",
-            "middle": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-4.jpg?x-oss-process=style/thumb-middle",
-            "large": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-4.jpg?x-oss-process=style/thumb-large",
-            "huge": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-4.jpg?x-oss-process=style/thumb-huge"
+            "SMALL": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-4.jpg?x-oss-process=style/thumb-small",
+            "MIDDLE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-4.jpg?x-oss-process=style/thumb-middle",
+            "LARGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-4.jpg?x-oss-process=style/thumb-large",
+            "HUGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-4.jpg?x-oss-process=style/thumb-huge"
         },
         "createdAt": "2019-07-24T07:09:28+00:00",
         "updatedAt": "2019-07-24T07:09:28+00:00"
@@ -117,10 +117,10 @@
         },
         "url": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-5.jpg",
         "thumbs": {
-            "small": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-5.jpg?x-oss-process=style/thumb-small",
-            "middle": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-5.jpg?x-oss-process=style/thumb-middle",
-            "large": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-5.jpg?x-oss-process=style/thumb-large",
-            "huge": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-5.jpg?x-oss-process=style/thumb-huge"
+            "SMALL": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-5.jpg?x-oss-process=style/thumb-small",
+            "MIDDLE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-5.jpg?x-oss-process=style/thumb-middle",
+            "LARGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-5.jpg?x-oss-process=style/thumb-large",
+            "HUGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-5.jpg?x-oss-process=style/thumb-huge"
         },
         "createdAt": "2019-07-24T07:09:28+00:00",
         "updatedAt": "2019-07-24T07:09:28+00:00"
@@ -138,10 +138,10 @@
         },
         "url": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-6.jpg",
         "thumbs": {
-            "small": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-6.jpg?x-oss-process=style/thumb-small",
-            "middle": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-6.jpg?x-oss-process=style/thumb-middle",
-            "large": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-6.jpg?x-oss-process=style/thumb-large",
-            "huge": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-6.jpg?x-oss-process=style/thumb-huge"
+            "SMALL": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-6.jpg?x-oss-process=style/thumb-small",
+            "MIDDLE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-6.jpg?x-oss-process=style/thumb-middle",
+            "LARGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-6.jpg?x-oss-process=style/thumb-large",
+            "HUGE": "https://static.jaggerwang.net/course/flutter-in-practice/image/post-image-6.jpg?x-oss-process=style/thumb-huge"
         },
         "createdAt": "2019-07-24T07:09:28+00:00",
         "updatedAt": "2019-07-24T07:09:28+00:00"
@@ -159,10 +159,10 @@
         },
         "url": "https://static.jaggerwang.net/course/flutter-in-practice/video/post-video-1.mp4",
         "thumbs": {
-            "small": "https://static.jaggerwang.net/course/flutter-in-practice/video/post-video-1.mp4?x-oss-process=video/snapshot,t_1000,f_jpg,w_240,h_0,m_fast",
-            "middle": "https://static.jaggerwang.net/course/flutter-in-practice/video/post-video-1.mp4?x-oss-process=video/snapshot,t_1000,f_jpg,w_480,h_0,m_fast",
-            "large": "https://static.jaggerwang.net/course/flutter-in-practice/video/post-video-1.mp4?x-oss-process=video/snapshot,t_1000,f_jpg,w_1280,h_0,m_fast",
-            "huge": "https://static.jaggerwang.net/course/flutter-in-practice/video/post-video-1.mp4?x-oss-process=video/snapshot,t_1000,f_jpg,w_1920,h_0,m_fast"
+            "SMALL": "https://static.jaggerwang.net/course/flutter-in-practice/video/post-video-1.mp4?x-oss-process=video/snapshot,t_1000,f_jpg,w_240,h_0,m_fast",
+            "MIDDLE": "https://static.jaggerwang.net/course/flutter-in-practice/video/post-video-1.mp4?x-oss-process=video/snapshot,t_1000,f_jpg,w_480,h_0,m_fast",
+            "LARGE": "https://static.jaggerwang.net/course/flutter-in-practice/video/post-video-1.mp4?x-oss-process=video/snapshot,t_1000,f_jpg,w_1280,h_0,m_fast",
+            "HUGE": "https://static.jaggerwang.net/course/flutter-in-practice/video/post-video-1.mp4?x-oss-process=video/snapshot,t_1000,f_jpg,w_1920,h_0,m_fast"
         },
         "createdAt": "2019-07-24T07:09:28+00:00",
         "updatedAt": "2019-07-24T07:09:28+00:00"

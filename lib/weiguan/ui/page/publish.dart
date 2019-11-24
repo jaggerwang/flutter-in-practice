@@ -6,8 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../../entity/entity.dart';
-import '../../usecase/usecase.dart';
-import '../../util/util.dart';
 import '../../container.dart';
 import '../ui.dart';
 
@@ -16,49 +14,62 @@ class PublishPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _AppBar(bodyKey: _bodyKey),
+      body: _Body(key: _bodyKey),
+      bottomNavigationBar: WgTabBar(currentIndex: 1),
+    );
+  }
+}
+
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  final GlobalKey<_BodyState> bodyKey;
+
+  _AppBar({@required this.bodyKey});
+
+  @override
+  Widget build(BuildContext context) {
     return StoreConnector<AppState, PostPublishForm>(
-      converter: (store) => store.state.post.publishForm,
+      converter: (store) => store.state.page.publishForm,
       distinct: true,
-      builder: (context, vm) => Scaffold(
-        appBar: AppBar(
-          title: Text('发动态'),
-          actions: [
-            Theme(
-              data: Theme.of(context)
-                  .copyWith(canvasColor: Theme.of(context).primaryColor),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<PostType>(
-                  value: vm.type,
-                  style: Theme.of(context)
-                      .textTheme
-                      .body1
-                      .copyWith(color: Colors.white),
-                  iconEnabledColor: Colors.white,
-                  onChanged: (value) =>
-                      _bodyKey.currentState._switchType(value),
-                  items: PostType.values
-                      .map((value) => DropdownMenuItem<PostType>(
-                            value: value,
-                            child: Text(PostEntity.typeNames[value]),
-                          ))
-                      .toList(),
-                ),
+      builder: (context, vm) => AppBar(
+        title: Text('发动态'),
+        actions: [
+          Theme(
+            data: Theme.of(context)
+                .copyWith(canvasColor: Theme.of(context).primaryColor),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<PostType>(
+                value: vm.type,
+                style: Theme.of(context)
+                    .textTheme
+                    .body1
+                    .copyWith(color: Colors.white),
+                iconEnabledColor: Colors.white,
+                onChanged: (value) => bodyKey.currentState._switchType(value),
+                items: PostType.values
+                    .map((value) => DropdownMenuItem<PostType>(
+                          value: value,
+                          child: Text(PostEntity.typeNames[value]),
+                        ))
+                    .toList(),
               ),
             ),
-            FlatButton(
-              onPressed: () => _bodyKey.currentState._submit(),
-              child: Text(
-                '提交',
-                style: Theme.of(context).primaryTextTheme.subhead,
-              ),
+          ),
+          FlatButton(
+            onPressed: () => bodyKey.currentState._submit(),
+            child: Text(
+              '提交',
+              style: Theme.of(context).primaryTextTheme.subhead,
             ),
-          ],
-        ),
-        body: _Body(key: _bodyKey),
-        bottomNavigationBar: WgTabBar(currentIndex: 1),
+          ),
+        ],
       ),
     );
   }
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
 class _Body extends StatefulWidget {
@@ -79,97 +90,69 @@ class _BodyState extends State<_Body> {
   }
 
   void _switchType(PostType type) {
-    WgContainer().postPresenter.savePublishForm(_vm.copyWith(type: type));
+    WgContainer()
+        .basePresenter
+        .dispatchAction(PageStateAction(publishForm: _vm.copyWith(type: type)));
   }
 
   void _saveText(String value) {
-    WgContainer()
-        .postPresenter
-        .savePublishForm(_vm.copyWith(text: value.trim()));
+    WgContainer().basePresenter.dispatchAction(
+        PageStateAction(publishForm: _vm.copyWith(text: value.trim())));
   }
 
   void _addFile() async {
     final source = await showModalBottomSheet<ImageSource>(
-        context: context,
-        builder: (context) => Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                FlatButton(
-                  onPressed: () =>
-                      Navigator.of(context).pop(ImageSource.gallery),
-                  textColor: Theme.of(context).primaryColor,
-                  child: Text('从相册选取'),
-                ),
-                Divider(),
-                FlatButton(
-                  onPressed: () =>
-                      Navigator.of(context).pop(ImageSource.camera),
-                  textColor: Theme.of(context).primaryColor,
-                  child: Text('用相机拍摄'),
-                ),
-                Divider(),
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('取消'),
-                ),
-              ],
-            ));
+      context: context,
+      builder: (context) => SelectImageSource(),
+    );
     if (source == null) {
       return;
     }
 
-    if (_vm.type == PostType.image) {
+    if (_vm.type == PostType.IMAGE) {
       final file = await ImagePicker.pickImage(source: source);
       if (file != null) {
-        WgContainer()
-            .postPresenter
-            .savePublishForm(_vm.copyWith(images: _vm.images + [file.path]));
+        WgContainer().basePresenter.dispatchAction(PageStateAction(
+            publishForm: _vm.copyWith(images: _vm.images + [file.path])));
       }
-    } else if (_vm.type == PostType.video) {
+    } else if (_vm.type == PostType.VIDEO) {
       final file = await ImagePicker.pickVideo(source: source);
       if (file != null) {
-        WgContainer()
-            .postPresenter
-            .savePublishForm(_vm.copyWith(video: file.path));
+        WgContainer().basePresenter.dispatchAction(
+            PageStateAction(publishForm: _vm.copyWith(video: file.path)));
       }
     }
   }
 
   void _removeFile(String path) {
-    if (_vm.type == PostType.image) {
-      WgContainer()
-          .postPresenter
-          .savePublishForm(_vm.copyWith(images: [..._vm.images]..remove(path)));
-    } else if (_vm.type == PostType.video) {
-      WgContainer().postPresenter.savePublishForm(_vm.copyWith(video: null));
+    if (_vm.type == PostType.IMAGE) {
+      WgContainer().basePresenter.dispatchAction(PageStateAction(
+          publishForm: _vm.copyWith(images: [..._vm.images]..remove(path))));
+    } else if (_vm.type == PostType.VIDEO) {
+      WgContainer().basePresenter.dispatchAction(
+          PageStateAction(publishForm: _vm.copyWith(video: null)));
     }
   }
 
   void _submit() async {
-    if ((_vm.type == PostType.text && _vm.text == '') ||
-        (_vm.type == PostType.image && _vm.images.isEmpty) ||
-        (_vm.type == PostType.video && _vm.video == null)) {
-      showMessage('内容不能为空');
+    if ((_vm.type == PostType.TEXT && _vm.text == '') ||
+        (_vm.type == PostType.IMAGE && _vm.images.isEmpty) ||
+        (_vm.type == PostType.VIDEO && _vm.video == null)) {
+      WgContainer().basePresenter.showMessage('内容不能为空');
       return;
     }
 
-    final cancelLoading = showLoading();
-    try {
+    WgContainer().basePresenter.doWithLoading(() async {
       await WgContainer().postPresenter.publish(_vm);
 
-      WgContainer().postPresenter.savePublishForm(PostPublishForm());
+      WgContainer()
+          .basePresenter
+          .dispatchAction(PageStateAction(publishForm: PostPublishForm()));
       _textEditingController.clear();
-      showNotification(
-        '发布成功',
-        duration: Duration(hours: 24),
-        level: NotificationLevel.success,
-      );
-    } on UseCaseException catch (e) {
-      showNotification('发布失败：${e.message}', duration: Duration(hours: 24));
-    } finally {
-      cancelLoading();
-    }
+      WgContainer()
+          .basePresenter
+          .showMessage('发布成功', level: MessageLevel.SUCCESS);
+    });
   }
 
   Widget _buildImagePicker(BuildContext context) {
@@ -192,7 +175,10 @@ class _BodyState extends State<_Body> {
                     children: [
                       GestureDetector(
                         onTap: Feedback.wrapForTap(
-                            () => Navigator.of(context).push(MaterialPageRoute(
+                            () => WgContainer()
+                                .basePresenter
+                                .navigator()
+                                .push(MaterialPageRoute(
                                   builder: (context) => ImagePlayerPage(
                                     files: images,
                                     initialIndex: entry.key,
@@ -290,10 +276,10 @@ class _BodyState extends State<_Body> {
     return StoreConnector<AppState, PostPublishForm>(
       onInit: (store) {
         _textEditingController =
-            TextEditingController(text: store.state.post.publishForm.text);
+            TextEditingController(text: store.state.page.publishForm.text);
       },
       converter: (store) {
-        _vm = store.state.post.publishForm;
+        _vm = store.state.page.publishForm;
         return _vm;
       },
       distinct: true,
@@ -318,13 +304,13 @@ class _BodyState extends State<_Body> {
                 ),
               ),
             ),
-            if (vm.type == PostType.image)
+            if (vm.type == PostType.IMAGE)
               Container(
                 margin:
                     EdgeInsets.only(top: WgContainer().theme.marginSizeNormal),
                 child: _buildImagePicker(context),
               ),
-            if (vm.type == PostType.video)
+            if (vm.type == PostType.VIDEO)
               Container(
                 margin:
                     EdgeInsets.only(top: WgContainer().theme.marginSizeNormal),

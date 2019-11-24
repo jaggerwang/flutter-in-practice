@@ -13,7 +13,7 @@ import '../../usecase/usecase.dart';
 import '../../util/util.dart';
 import '../../config.dart';
 
-class WeiguanServiceMock implements WeiguanService {
+class WeiguanMockService implements WeiguanService {
   final WgConfig config;
   final Logger logger;
   final Dio client = null;
@@ -45,7 +45,7 @@ class WeiguanServiceMock implements WeiguanService {
   final _followingPostIds = List.generate(21, (i) => 21 - i);
   int _userId;
 
-  WeiguanServiceMock({
+  WeiguanMockService({
     @required this.config,
     @required this.logger,
   }) {
@@ -85,8 +85,7 @@ class WeiguanServiceMock implements WeiguanService {
   }
 
   @override
-  Future<UserEntity> accountRegister(UserEntity userEntity,
-      [String code]) async {
+  Future<UserEntity> userRegister(UserEntity userEntity) async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
@@ -103,10 +102,7 @@ class WeiguanServiceMock implements WeiguanService {
   }
 
   @override
-  Future<UserEntity> accountLogin(
-      {String username, String mobile, @required String password}) async {
-    assert(username != null || mobile != null);
-
+  Future<UserEntity> userLogin(String username, String password) async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
@@ -123,7 +119,7 @@ class WeiguanServiceMock implements WeiguanService {
   }
 
   @override
-  Future<UserEntity> accountInfo() async {
+  Future<UserEntity> userLogged() async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
@@ -139,7 +135,7 @@ class WeiguanServiceMock implements WeiguanService {
   }
 
   @override
-  Future<UserEntity> accountLogout() async {
+  Future<UserEntity> userLogout() async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
@@ -157,7 +153,7 @@ class WeiguanServiceMock implements WeiguanService {
   }
 
   @override
-  Future<UserEntity> accountModify(UserEntity userEntity, [String code]) async {
+  Future<UserEntity> userModify(UserEntity userEntity, [String code]) async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
@@ -183,7 +179,117 @@ class WeiguanServiceMock implements WeiguanService {
   }
 
   @override
-  Future<String> accountSendMobileVerifyCode(String type, String mobile) async {
+  Future<UserEntity> userInfo(int id) async {
+    final response = await Future.delayed(
+      Duration(
+        milliseconds: 500 + _random.nextInt(500),
+      ),
+      () {
+        final user = _users[id];
+
+        if (_userId != null) {
+          final followingUserIds = _followingUserIds[_userId] ?? [];
+          user['following'] = followingUserIds.contains(user['id']);
+        }
+        return {
+          'user': user,
+        };
+      },
+    );
+    return UserEntity.fromJson(response['user']);
+  }
+
+  @override
+  Future<void> userFollow(int userId) async {
+    await Future.delayed(
+      Duration(
+        milliseconds: 500 + _random.nextInt(500),
+      ),
+      () {
+        _followerUserIds[_userId] ??= [];
+        _followerUserIds[_userId].insert(0, userId);
+
+        return null;
+      },
+    );
+  }
+
+  @override
+  Future<void> userUnfollow(int userId) async {
+    await Future.delayed(
+      Duration(
+        milliseconds: 500 + _random.nextInt(500),
+      ),
+      () {
+        _followerUserIds[_userId]?.removeWhere((v) => v == userId);
+
+        return null;
+      },
+    );
+  }
+
+  @override
+  Future<List<UserEntity>> userFollowing(
+      {int userId, int limit = 10, int offset = 0}) async {
+    final response = await Future.delayed(
+      Duration(
+        milliseconds: 500 + _random.nextInt(500),
+      ),
+      () {
+        userId = userId ?? _userId;
+        final followingUserIds = _followingUserIds[userId] ?? [];
+
+        final users = followingUserIds
+            .skip(offset)
+            .take(limit)
+            .map((v) => _users[v])
+            .toList();
+
+        if (_userId != null) {
+          final followingUserIds = _followingUserIds[_userId] ?? [];
+          users.forEach((user) {
+            user['following'] = followingUserIds.contains(user['id']);
+          });
+        }
+
+        return {'users': users};
+      },
+    );
+    return response['users'].map((v) => UserEntity.fromJson(v)).toList();
+  }
+
+  @override
+  Future<List<UserEntity>> userFollower(
+      {int userId, int limit = 10, int offset = 0}) async {
+    final response = await Future.delayed(
+      Duration(
+        milliseconds: 500 + _random.nextInt(500),
+      ),
+      () {
+        userId = userId ?? _userId;
+        final followerUserIds = _followerUserIds[userId] ?? [];
+
+        final users = followerUserIds
+            .skip(offset)
+            .take(limit)
+            .map((v) => _users[v])
+            .toList();
+
+        if (_userId != null) {
+          final followingUserIds = _followingUserIds[_userId] ?? [];
+          users.forEach((user) {
+            user['following'] = followingUserIds.contains(user['id']);
+          });
+        }
+
+        return {'users': users};
+      },
+    );
+    return response['users'].map((v) => UserEntity.fromJson(v)).toList();
+  }
+
+  @override
+  Future<String> userSendMobileVerifyCode(String type, String mobile) async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
@@ -249,7 +355,7 @@ class WeiguanServiceMock implements WeiguanService {
   }
 
   @override
-  Future<PostEntity> postInfo(int postId) async {
+  Future<PostEntity> postInfo(int id) async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
@@ -257,11 +363,11 @@ class WeiguanServiceMock implements WeiguanService {
       () {
         final post = Map<String, dynamic>.from(
             _posts[_posts.keys.elementAt(_random.nextInt(_posts.length))]);
-        post['id'] = postId;
+        post['id'] = id;
 
         if (_userId != null) {
           final likedPostIds = _likedPostIds[_userId] ?? [];
-          post['isLiked'] = likedPostIds.contains(post['id']);
+          post['liked'] = likedPostIds.contains(post['id']);
         }
 
         return {
@@ -274,12 +380,13 @@ class WeiguanServiceMock implements WeiguanService {
 
   @override
   Future<List<PostEntity>> postPublished(
-      {@required int userId, int limit = 10, int offset = 0}) async {
+      {int userId, int limit = 10, int offset = 0}) async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
       ),
       () {
+        userId = userId ?? _userId;
         final publishedPostIds = _publishedPostIds[_userId] ?? [];
 
         final posts = publishedPostIds.skip(offset).take(limit).map((v) {
@@ -292,19 +399,14 @@ class WeiguanServiceMock implements WeiguanService {
         if (_userId != null) {
           final likedPostIds = _likedPostIds[_userId] ?? [];
           posts.forEach((post) {
-            post['isLiked'] = likedPostIds.contains(post['id']);
+            post['liked'] = likedPostIds.contains(post['id']);
           });
         }
 
-        return {
-          'posts': posts,
-          'total': publishedPostIds.length,
-        };
+        return {'posts': posts};
       },
     );
-    return (response['posts'] as List<dynamic>)
-        .map((v) => PostEntity.fromJson(v))
-        .toList();
+    return response['posts'].map((v) => PostEntity.fromJson(v)).toList();
   }
 
   @override
@@ -338,12 +440,13 @@ class WeiguanServiceMock implements WeiguanService {
 
   @override
   Future<List<PostEntity>> postLiked(
-      {@required int userId, int limit = 10, int offset = 0}) async {
+      {int userId, int limit = 10, int offset = 0}) async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
       ),
       () {
+        userId = userId ?? _userId;
         final likedPostIds = _likedPostIds[userId] ?? [];
 
         final posts = likedPostIds.skip(offset).take(limit).map((v) {
@@ -356,19 +459,14 @@ class WeiguanServiceMock implements WeiguanService {
         if (_userId != null) {
           final likedPostIds = _likedPostIds[_userId] ?? [];
           posts.forEach((post) {
-            post['isLiked'] = likedPostIds.contains(post['id']);
+            post['liked'] = likedPostIds.contains(post['id']);
           });
         }
 
-        return {
-          'posts': posts,
-          'total': likedPostIds.length,
-        };
+        return {'posts': posts};
       },
     );
-    return (response['posts'] as List<dynamic>)
-        .map((v) => PostEntity.fromJson(v))
-        .toList();
+    return response['posts'].map((v) => PostEntity.fromJson(v)).toList();
   }
 
   @override
@@ -406,27 +504,19 @@ class WeiguanServiceMock implements WeiguanService {
         if (_userId != null) {
           final likedPostIds = _likedPostIds[_userId] ?? [];
           posts.forEach((post) {
-            post['isLiked'] = likedPostIds.contains(post['id']);
+            post['liked'] = likedPostIds.contains(post['id']);
           });
         }
 
-        return {
-          'posts': posts,
-          'total': _followingPostIds.length,
-        };
+        return {'posts': posts};
       },
     );
-    return (response['posts'] as List<dynamic>)
-        .map((v) => PostEntity.fromJson(v))
-        .toList();
+    return response['posts'].map((v) => PostEntity.fromJson(v)).toList();
   }
 
   @override
-  Future<List<FileEntity>> storageUpload(
-      {String region,
-      String bucket,
-      String path,
-      @required List<String> files}) async {
+  Future<List<FileEntity>> fileUpload(List<String> files,
+      {String region, String bucket, String path}) async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
@@ -443,123 +533,5 @@ class WeiguanServiceMock implements WeiguanService {
       },
     );
     return response['files'].map((v) => FileEntity.fromJson(v)).toList();
-  }
-
-  @override
-  Future<UserEntity> userInfo(int userId) async {
-    final response = await Future.delayed(
-      Duration(
-        milliseconds: 500 + _random.nextInt(500),
-      ),
-      () {
-        final user = _users[userId];
-
-        if (_userId != null) {
-          final followingUserIds = _followingUserIds[_userId] ?? [];
-          user['isFollowing'] = followingUserIds.contains(user['id']);
-        }
-        return {
-          'user': user,
-        };
-      },
-    );
-    return UserEntity.fromJson(response['user']);
-  }
-
-  @override
-  Future<void> userFollow(int followingId) async {
-    await Future.delayed(
-      Duration(
-        milliseconds: 500 + _random.nextInt(500),
-      ),
-      () {
-        _followerUserIds[_userId] ??= [];
-        _followerUserIds[_userId].insert(0, followingId);
-
-        return null;
-      },
-    );
-  }
-
-  @override
-  Future<void> userUnfollow(int followingId) async {
-    await Future.delayed(
-      Duration(
-        milliseconds: 500 + _random.nextInt(500),
-      ),
-      () {
-        _followerUserIds[_userId]?.removeWhere((v) => v == followingId);
-
-        return null;
-      },
-    );
-  }
-
-  @override
-  Future<List<UserEntity>> userFollowings(
-      {@required int userId, int limit = 10, int offset = 0}) async {
-    final response = await Future.delayed(
-      Duration(
-        milliseconds: 500 + _random.nextInt(500),
-      ),
-      () {
-        final followingUserIds = _followingUserIds[userId] ?? [];
-
-        final users = followingUserIds
-            .skip(offset)
-            .take(limit)
-            .map((v) => _users[v])
-            .toList();
-
-        if (_userId != null) {
-          final followingUserIds = _followingUserIds[_userId] ?? [];
-          users.forEach((user) {
-            user['isFollowing'] = followingUserIds.contains(user['id']);
-          });
-        }
-
-        return {
-          'users': users,
-          'total': followingUserIds.length,
-        };
-      },
-    );
-    return (response['users'] as List<dynamic>)
-        .map((v) => UserEntity.fromJson(v))
-        .toList();
-  }
-
-  @override
-  Future<List<UserEntity>> userFollowers(
-      {@required int userId, int limit = 10, int offset = 0}) async {
-    final response = await Future.delayed(
-      Duration(
-        milliseconds: 500 + _random.nextInt(500),
-      ),
-      () {
-        final followerUserIds = _followerUserIds[userId] ?? [];
-
-        final users = followerUserIds
-            .skip(offset)
-            .take(limit)
-            .map((v) => _users[v])
-            .toList();
-
-        if (_userId != null) {
-          final followingUserIds = _followingUserIds[_userId] ?? [];
-          users.forEach((user) {
-            user['isFollowing'] = followingUserIds.contains(user['id']);
-          });
-        }
-
-        return {
-          'users': users,
-          'total': followerUserIds.length,
-        };
-      },
-    );
-    return (response['users'] as List<dynamic>)
-        .map((v) => UserEntity.fromJson(v))
-        .toList();
   }
 }

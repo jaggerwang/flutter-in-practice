@@ -4,19 +4,20 @@ import 'package:redux/redux.dart';
 import '../../entity/entity.dart';
 import '../../ui/ui.dart';
 import '../../usecase/usecase.dart';
+import 'base.dart';
 
-class PostPresenter {
-  Store<AppState> store;
-  PostUseCase postUseCase;
+class PostPresenter extends BasePresenter {
+  WeiguanService weiguanService;
+  PostUsecases postUsecases;
 
-  PostPresenter(this.store, this.postUseCase);
-
-  void savePublishForm(PostPublishForm form) {
-    store.dispatch(PostPublishFormAction(form: form));
-  }
+  PostPresenter({
+    @required Store<AppState> appStore,
+    @required this.weiguanService,
+    @required this.postUsecases,
+  }) : super(appStore: appStore);
 
   Future<PostEntity> publish(PostPublishForm form) async {
-    final post = await postUseCase.publish(
+    final post = await postUsecases.publish(
         type: form.type,
         text: form.text,
         localImagePaths: form.images,
@@ -25,51 +26,64 @@ class PostPresenter {
   }
 
   Future<void> delete(int postId) async {
-    await postUseCase.delete(postId);
+    await weiguanService.postDelete(postId);
 
-    store.dispatch(PostDeleteAction(postId: postId));
+    dispatchAction(PostDeleteAction(postId: postId));
   }
 
   Future<PostEntity> info(int postId) async {
-    final post = await postUseCase.info(postId);
+    final post = await weiguanService.postInfo(postId);
     return post;
   }
 
   Future<List<PostEntity>> published(
-      {@required int userId, int limit = 10, int offset = 0}) async {
-    final posts = await postUseCase.published(
+      {int userId, int limit = 10, int offset = 0}) async {
+    final posts = await weiguanService.postPublished(
         userId: userId, limit: limit, offset: offset);
     return posts;
   }
 
   Future<void> like(int postId) async {
-    await postUseCase.like(postId);
+    await weiguanService.postLike(postId);
 
-    store.dispatch(PostLikeAction(postId: postId));
+    dispatchAction(PostLikeAction(postId: postId));
   }
 
   Future<void> unlike(int postId) async {
-    await postUseCase.unlike(postId);
+    await weiguanService.postUnlike(postId);
 
-    store.dispatch(PostUnlikeAction(postId: postId));
+    dispatchAction(PostUnlikeAction(postId: postId));
   }
 
   Future<List<PostEntity>> liked(
-      {@required int userId, int limit = 10, int offset = 0}) async {
-    final posts =
-        await postUseCase.liked(userId: userId, limit: limit, offset: offset);
+      {int userId, int limit = 10, int offset = 0}) async {
+    final posts = await weiguanService.postLiked(
+        userId: userId, limit: limit, offset: offset);
     return posts;
   }
 
   Future<List<PostEntity>> following(
       {int limit = 10, int beforeId, int afterId}) async {
-    final posts = await postUseCase.following(
+    final posts = await weiguanService.postFollowing(
         limit: limit, beforeId: beforeId, afterId: afterId);
 
-    store.dispatch(PostFollowingsAction(
+    dispatchAction(PostFollowingAction(
       posts: posts,
-      beforeId: beforeId,
-      afterId: afterId,
+      append: afterId == null,
+      allLoaded: posts.length < limit,
+    ));
+
+    return posts;
+  }
+
+  Future<List<PostEntity>> hot({int limit = 10, int offset = 0}) async {
+    final posts =
+        await weiguanService.postPublished(limit: limit, offset: offset);
+
+    dispatchAction(PostHotAction(
+      posts: posts,
+      clearAll: offset == 0,
+      allLoaded: posts.length < limit,
     ));
 
     return posts;

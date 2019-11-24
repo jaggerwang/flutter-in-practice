@@ -2,7 +2,7 @@
 
 This project is the reference source code of online video course [叽歪课程 - Flutter 移动应用开发实战](https://blog.jaggerwang.net/jwcourse-flutter-mobile-app-develop-in-practice/), including usage demo of flutter components and a social video app weiguan like tiktok.
 
-> To students of course: 最新的实战项目目录结构已按照新版 [干净架构](https://blog.jaggerwang.net/clean-architecture-in-practice/) 进行了重构，目录结构调整较大，如想获取之前版本，可查看提交记录。
+> To students of course: 最新的实战项目目录结构已按照新版 [干净架构最佳实践](https://blog.jaggerwang.net/clean-architecture-in-practice/) 进行了重构，目录结构调整较大。如想获取之前版本，可查看提交记录。
 
 ## Dependent frameworks and packages
 
@@ -80,30 +80,15 @@ To run weiguan:
 flutter run -t lib/weiguan/mobile/main.dart
 ```
 
-> The video player can not work on iOS simulator, you should use an Android emulator or a real device.
+The weiguan app need a backend api service, as default it will use a mocked api service. You can enable `enableRestApi` option to use a real service from [Sanic in Practice](https://github.com/jaggerwang/sanic-in-practice) or [Spring Boot in Practice](https://github.com/jaggerwang/spring-boot-in-practice). The later one also supplys a graphql api service, you can enable `enableGraphQLApi` option to use it.
 
-To run weiguan in development mode:
+If you want to see more log info, you can run weiguan in dev mode:
 
 ```bash
 flutter run -t lib/weiguan/mobile/main_dev.dart
 ```
 
-The weiguan app default use a mocked api service, you can replace it with a real api service supplied by [Sanic in Practice](https://github.com/jaggerwang/sanic-in-practice). Please remember to change the main file as the following:
-
-```dart
-...
-
-void main() async {
-  final container = WgContainer(WgConfig(
-    ...
-    isMockApi: false,
-    wgApiBase: 'http://localhost:8000',
-  ));
-  await container.onReady;
-
-  ...
-}
-```
+> The video player can not work on iOS simulator, you should use an Android emulator or a real device.
 
 ## Screenshots
 

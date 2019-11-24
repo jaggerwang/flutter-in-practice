@@ -6,8 +6,8 @@ import 'container.dart';
 
 void main() async {
   final container = WgContainer(WgConfig(
-    isMockApi: true,
-    // wgApiBase: 'http://localhost:8000',
+    enableRestApi: false,
+    apiUrlBase: 'http://localhost:8000',
   ));
   await container.onReady;
 

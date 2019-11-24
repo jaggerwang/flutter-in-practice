@@ -3,10 +3,8 @@ import 'package:meta/meta.dart';
 import '../entity/entity.dart';
 import 'usecase.dart';
 
-class PostUseCase {
-  WeiguanService weiguanService;
-
-  PostUseCase(this.weiguanService);
+class PostUsecases extends BaseUsecases {
+  PostUsecases(WeiguanService weiguanService) : super(weiguanService);
 
   Future<PostEntity> publish(
       {@required PostType type,
@@ -15,51 +13,17 @@ class PostUseCase {
       String localVideoPath}) async {
     List<int> imageIds;
     int videoId;
-    if (type == PostType.image) {
-      final files = await weiguanService.storageUpload(
-          path: 'post', files: localImagePaths);
+    if (type == PostType.IMAGE) {
+      final files =
+          await weiguanService.fileUpload(localImagePaths, path: 'post');
       imageIds = files.map((v) => v.id).toList();
-    } else if (type == PostType.video) {
-      final files = await weiguanService
-          .storageUpload(path: 'post', files: [localVideoPath]);
+    } else if (type == PostType.VIDEO) {
+      final files =
+          await weiguanService.fileUpload([localVideoPath], path: 'post');
       videoId = files.first.id;
     }
 
     return weiguanService.postPublish(PostEntity(
         type: type, text: text, imageIds: imageIds, videoId: videoId));
-  }
-
-  Future<void> delete(int postId) {
-    return weiguanService.postDelete(postId);
-  }
-
-  Future<PostEntity> info(int postId) {
-    return weiguanService.postInfo(postId);
-  }
-
-  Future<List<PostEntity>> published(
-      {@required int userId, int limit = 10, int offset = 0}) {
-    return weiguanService.postPublished(
-        userId: userId, limit: limit, offset: offset);
-  }
-
-  Future<void> like(int postId) {
-    return weiguanService.postLike(postId);
-  }
-
-  Future<void> unlike(int postId) {
-    return weiguanService.postUnlike(postId);
-  }
-
-  Future<List<PostEntity>> liked(
-      {@required int userId, int limit = 10, int offset = 0}) {
-    return weiguanService.postLiked(
-        userId: userId, limit: limit, offset: offset);
-  }
-
-  Future<List<PostEntity>> following(
-      {int limit = 10, int beforeId, int afterId}) {
-    return weiguanService.postFollowing(
-        limit: limit, beforeId: beforeId, afterId: afterId);
   }
 }

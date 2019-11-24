@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../entity/entity.dart';
-import '../../../usecase/usecase.dart';
 import '../../../util/util.dart';
 import '../../../container.dart';
 import '../../ui.dart';
@@ -79,18 +78,13 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
   }
 
   void _loadUser() async {
-    final cancelLoading = showLoading();
-    try {
+    WgContainer().basePresenter.doWithLoading(() async {
       final user = await WgContainer().userPresenter.info(widget.userId);
 
       setState(() {
         _user = user;
       });
-    } on UseCaseException catch (e) {
-      showMessage(e.message);
-    } finally {
-      cancelLoading();
-    }
+    });
   }
 
   void _loadPublishedPosts() async {
@@ -98,8 +92,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
       return;
     }
 
-    final cancelLoading = showLoading();
-    try {
+    WgContainer().basePresenter.doWithLoading(() async {
       final posts = await WgContainer().postPresenter.published(
           userId: widget.userId, limit: 10, offset: _publishedPosts.length);
 
@@ -107,11 +100,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
         _loadeds['publishedPosts'] = posts.length < 10;
         _publishedPosts.addAll(posts);
       });
-    } on UseCaseException catch (e) {
-      showMessage(e.message);
-    } finally {
-      cancelLoading();
-    }
+    });
   }
 
   void _loadLikedPosts() async {
@@ -119,8 +108,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
       return;
     }
 
-    final cancelLoading = showLoading();
-    try {
+    WgContainer().basePresenter.doWithLoading(() async {
       final posts = await WgContainer()
           .postPresenter
           .liked(userId: widget.userId, limit: 10, offset: _likedPosts.length);
@@ -129,11 +117,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
         _loadeds['likedPosts'] = posts.length < 10;
         _likedPosts.addAll(posts);
       });
-    } on UseCaseException catch (e) {
-      showMessage(e.message);
-    } finally {
-      cancelLoading();
-    }
+    });
   }
 
   void _loadFollowingUsers() async {
@@ -141,50 +125,35 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
       return;
     }
 
-    final cancelLoading = showLoading();
-    try {
-      final users = await WgContainer().userPresenter.followings(
+    WgContainer().basePresenter.doWithLoading(() async {
+      final users = await WgContainer().userPresenter.following(
           userId: widget.userId, limit: 20, offset: _followingUsers.length);
 
       setState(() {
         _loadeds['followingUsers'] = users.length < 20;
         _followingUsers.addAll(users);
       });
-    } on UseCaseException catch (e) {
-      showMessage(e.message);
-    } finally {
-      cancelLoading();
-    }
+    });
   }
 
   void _followUser() async {
-    final cancelLoading = showLoading();
-    try {
+    WgContainer().basePresenter.doWithLoading(() async {
       await WgContainer().userPresenter.follow(widget.userId);
 
       setState(() {
-        _user = _user.copyWith(isFollowing: true);
+        _user = _user.copyWith(following: true);
       });
-    } on UseCaseException catch (e) {
-      showMessage(e.message);
-    } finally {
-      cancelLoading();
-    }
+    });
   }
 
   void _unfollowUser() async {
-    final cancelLoading = showLoading();
-    try {
+    WgContainer().basePresenter.doWithLoading(() async {
       await WgContainer().userPresenter.unfollow(widget.userId);
 
       setState(() {
-        _user = _user.copyWith(isFollowing: false);
+        _user = _user.copyWith(following: false);
       });
-    } on UseCaseException catch (e) {
-      showMessage(e.message);
-    } finally {
-      cancelLoading();
-    }
+    });
   }
 
   Widget _buildSilverAppBar(BuildContext context, bool innerBoxIsScrolled) {
@@ -194,14 +163,14 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
         actions: [
           FlatButton(
             onPressed: () {
-              if (_user.isFollowing) {
+              if (_user.following) {
                 _unfollowUser();
               } else {
                 _followUser();
               }
             },
             child: Text(
-              _user.isFollowing ? '取消关注' : '关注',
+              _user.following ? '取消关注' : '关注',
               style: Theme.of(context).primaryTextTheme.subhead,
             ),
           ),
@@ -215,7 +184,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
                 ? null
                 : DecorationImage(
                     image: CachedNetworkImageProvider(
-                        _user.avatar.thumbs[FileThumbType.large]),
+                        _user.avatar.thumbs[FileThumbType.LARGE]),
                     fit: BoxFit.cover,
                   ),
           ),
@@ -307,11 +276,11 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
               post: _publishedPosts[index],
               onLike: () => setState(() {
                 _publishedPosts[index] =
-                    _publishedPosts[index].copyWith(isLiked: true);
+                    _publishedPosts[index].copyWith(liked: true);
               }),
               onUnlike: () => setState(() {
                 _publishedPosts[index] =
-                    _publishedPosts[index].copyWith(isLiked: false);
+                    _publishedPosts[index].copyWith(liked: false);
               }),
               onDelete: () => setState(() {
                 _publishedPosts.removeAt(index);
@@ -337,11 +306,10 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
               key: ValueKey(_likedPosts[index].id),
               post: _likedPosts[index],
               onLike: () => setState(() {
-                _likedPosts[index] = _likedPosts[index].copyWith(isLiked: true);
+                _likedPosts[index] = _likedPosts[index].copyWith(liked: true);
               }),
               onUnlike: () => setState(() {
-                _likedPosts[index] =
-                    _likedPosts[index].copyWith(isLiked: false);
+                _likedPosts[index] = _likedPosts[index].copyWith(liked: false);
               }),
               onDelete: () => setState(() {
                 _likedPosts.removeAt(index);
@@ -368,11 +336,11 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
               user: _followingUsers[index],
               onFollow: () => setState(() {
                 _followingUsers[index] =
-                    _followingUsers[index].copyWith(isFollowing: true);
+                    _followingUsers[index].copyWith(following: true);
               }),
               onUnfollow: () => setState(() {
                 _followingUsers[index] =
-                    _followingUsers[index].copyWith(isFollowing: false);
+                    _followingUsers[index].copyWith(following: false);
               }),
             ),
             childCount: _followingUsers.length,

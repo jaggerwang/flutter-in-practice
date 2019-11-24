@@ -3,7 +3,7 @@ import 'package:functional_data/functional_data.dart';
 
 part 'file.g.dart';
 
-enum FileThumbType { small, middle, large, huge }
+enum FileThumbType { SMALL, MIDDLE, LARGE, HUGE }
 
 @JsonSerializable()
 @FunctionalData()

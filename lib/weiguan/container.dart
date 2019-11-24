@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:logging/logging.dart';
 import 'package:redux/redux.dart';
@@ -12,7 +13,6 @@ import 'adapter/adapter.dart';
 import 'ui/ui.dart';
 import 'usecase/usecase.dart';
 import 'config.dart';
-import 'theme.dart';
 
 class WgContainer {
   static WgContainer _instance;
@@ -37,19 +37,21 @@ class WgContainer {
       _config.appDocDir = await getApplicationDocumentsDirectory();
       print(_config);
 
-      injectTheme();
+      registerLoggers();
 
-      injectLogger();
+      registerTheme();
 
-      injectAppState();
+      registerNavigatorKeys();
 
-      await injectAppStore();
+      registerAppState();
 
-      injectService();
+      await registerAppStore();
 
-      injectUseCase();
+      registerServices();
 
-      injectPresenter();
+      registerUsecases();
+
+      registerPresenters();
     });
   }
 
@@ -57,17 +59,7 @@ class WgContainer {
     return _config;
   }
 
-  void injectTheme() {
-    _injector.registerSingleton<WgTheme>((injector) {
-      return WgTheme();
-    });
-  }
-
-  WgTheme get theme {
-    return _injector.getDependency<WgTheme>();
-  }
-
-  void injectLogger() {
+  void registerLoggers() {
     Logger.root.level = config.loggerLevel;
     Logger.root.onRecord.listen((record) {
       final label = record.loggerName.padRight(3).substring(0, 3).toUpperCase();
@@ -99,7 +91,28 @@ class WgContainer {
     return _injector.getDependency<Logger>(dependencyName: 'action');
   }
 
-  void injectAppState() {
+  void registerTheme() {
+    _injector.registerSingleton<WgTheme>((injector) {
+      return WgTheme();
+    });
+  }
+
+  WgTheme get theme {
+    return _injector.getDependency<WgTheme>();
+  }
+
+  void registerNavigatorKeys() {
+    _injector.registerSingleton<GlobalKey<NavigatorState>>((injector) {
+      return GlobalKey<NavigatorState>();
+    }, dependencyName: 'root');
+  }
+
+  GlobalKey<NavigatorState> get rootNavigatorKey {
+    return _injector.getDependency<GlobalKey<NavigatorState>>(
+        dependencyName: 'root');
+  }
+
+  void registerAppState() {
     _injector.registerDependency<AppState>((injector) {
       return AppState(version: _config.packageInfo.version);
     });
@@ -109,7 +122,7 @@ class WgContainer {
     return _injector.getDependency<AppState>();
   }
 
-  Future<void> injectAppStore() async {
+  Future<void> registerAppStore() async {
     final store = await createStore();
 
     _injector.registerSingleton<Store<AppState>>((injector) {
@@ -121,23 +134,32 @@ class WgContainer {
     return _injector.getDependency<Store<AppState>>();
   }
 
-  void injectService() {
+  void registerServices() {
     _injector.registerSingleton<WeiguanService>((injector) {
-      if (config.isMockApi) {
-        return WeiguanServiceMock(
-          config: config,
-          logger: apiLogger,
-        );
-      } else {
+      final createClient = () {
         final client = Dio();
-        client.options.baseUrl = config.wgApiBase;
+        client.options.baseUrl = config.apiUrlBase;
         client.interceptors.add(CookieManager(
             PersistCookieJar(dir: '${config.appDocDir.path}/cookies')));
+        return client;
+      };
 
-        return WeiguanServiceImpl(
+      if (config.enableRestApi) {
+        return WeiguanRestService(
           config: config,
           logger: apiLogger,
-          client: client,
+          client: createClient(),
+        );
+      } else if (config.enableGraphQLApi) {
+        return WeiguanGraphQLService(
+          config: config,
+          logger: apiLogger,
+          client: createClient(),
+        );
+      } else {
+        return WeiguanMockService(
+          config: config,
+          logger: apiLogger,
         );
       }
     });
@@ -147,55 +169,53 @@ class WgContainer {
     return _injector.getDependency<WeiguanService>();
   }
 
-  void injectUseCase() {
-    _injector.registerSingleton<AccountUseCase>((injector) {
-      return AccountUseCase(weiguanService);
+  void registerUsecases() {
+    _injector.registerSingleton<UserUsecases>((injector) {
+      return UserUsecases(weiguanService);
     });
 
-    _injector.registerSingleton<PostUseCase>((injector) {
-      return PostUseCase(weiguanService);
-    });
-
-    _injector.registerSingleton<UserUseCase>((injector) {
-      return UserUseCase(weiguanService);
+    _injector.registerSingleton<PostUsecases>((injector) {
+      return PostUsecases(weiguanService);
     });
   }
 
-  AccountUseCase get accountUseCase {
-    return _injector.getDependency<AccountUseCase>();
+  UserUsecases get userUsecases {
+    return _injector.getDependency<UserUsecases>();
   }
 
-  PostUseCase get postUseCase {
-    return _injector.getDependency<PostUseCase>();
+  PostUsecases get postUsecases {
+    return _injector.getDependency<PostUsecases>();
   }
 
-  UserUseCase get userUseCase {
-    return _injector.getDependency<UserUseCase>();
-  }
-
-  void injectPresenter() {
-    _injector.registerSingleton<AccountPresenter>((injector) {
-      return AccountPresenter(appStore, accountUseCase);
-    });
-
-    _injector.registerSingleton<PostPresenter>((injector) {
-      return PostPresenter(appStore, postUseCase);
+  void registerPresenters() {
+    _injector.registerSingleton<BasePresenter>((injector) {
+      return BasePresenter(appStore: appStore);
     });
 
     _injector.registerSingleton<UserPresenter>((injector) {
-      return UserPresenter(appStore, userUseCase);
+      return UserPresenter(
+          appStore: appStore,
+          weiguanService: weiguanService,
+          userUsecases: userUsecases);
+    });
+
+    _injector.registerSingleton<PostPresenter>((injector) {
+      return PostPresenter(
+          appStore: appStore,
+          weiguanService: weiguanService,
+          postUsecases: postUsecases);
     });
   }
 
-  AccountPresenter get accountPresenter {
-    return _injector.getDependency<AccountPresenter>();
-  }
-
-  PostPresenter get postPresenter {
-    return _injector.getDependency<PostPresenter>();
+  BasePresenter get basePresenter {
+    return _injector.getDependency<BasePresenter>();
   }
 
   UserPresenter get userPresenter {
     return _injector.getDependency<UserPresenter>();
+  }
+
+  PostPresenter get postPresenter {
+    return _injector.getDependency<PostPresenter>();
   }
 }

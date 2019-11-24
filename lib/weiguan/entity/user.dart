@@ -20,7 +20,7 @@ class UserEntity extends $UserEntity {
   final FileEntity avatar;
   final UserStatEntity stat;
   @JsonKey(defaultValue: false)
-  final bool isFollowing;
+  final bool following;
 
   const UserEntity({
     this.id,
@@ -34,7 +34,7 @@ class UserEntity extends $UserEntity {
     this.updatedAt,
     this.avatar,
     this.stat,
-    this.isFollowing,
+    this.following,
   });
 
   factory UserEntity.fromJson(Map<String, dynamic> json) =>

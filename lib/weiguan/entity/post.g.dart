@@ -19,7 +19,7 @@ abstract class $PostEntity {
   List<FileEntity> get images;
   FileEntity get video;
   PostStatEntity get stat;
-  bool get isLiked;
+  bool get liked;
   const $PostEntity();
   PostEntity copyWith(
           {int id,
@@ -34,7 +34,7 @@ abstract class $PostEntity {
           List<FileEntity> images,
           FileEntity video,
           PostStatEntity stat,
-          bool isLiked}) =>
+          bool liked}) =>
       PostEntity(
           id: id ?? this.id,
           userId: userId ?? this.userId,
@@ -48,9 +48,9 @@ abstract class $PostEntity {
           images: images ?? this.images,
           video: video ?? this.video,
           stat: stat ?? this.stat,
-          isLiked: isLiked ?? this.isLiked);
+          liked: liked ?? this.liked);
   String toString() =>
-      "PostEntity(id: $id, userId: $userId, type: $type, text: $text, imageIds: $imageIds, videoId: $videoId, createdAt: $createdAt, updatedAt: $updatedAt, user: $user, images: $images, video: $video, stat: $stat, isLiked: $isLiked)";
+      "PostEntity(id: $id, userId: $userId, type: $type, text: $text, imageIds: $imageIds, videoId: $videoId, createdAt: $createdAt, updatedAt: $updatedAt, user: $user, images: $images, video: $video, stat: $stat, liked: $liked)";
   bool operator ==(dynamic other) =>
       other.runtimeType == runtimeType &&
       id == other.id &&
@@ -65,7 +65,7 @@ abstract class $PostEntity {
       images == other.images &&
       video == other.video &&
       stat == other.stat &&
-      isLiked == other.isLiked;
+      liked == other.liked;
   @override
   int get hashCode {
     var result = 17;
@@ -81,7 +81,7 @@ abstract class $PostEntity {
     result = 37 * result + images.hashCode;
     result = 37 * result + video.hashCode;
     result = 37 * result + stat.hashCode;
-    result = 37 * result + isLiked.hashCode;
+    result = 37 * result + liked.hashCode;
     return result;
   }
 }
@@ -111,8 +111,8 @@ class PostEntity$ {
       (s_) => s_.video, (s_, video) => s_.copyWith(video: video));
   static final stat = Lens<PostEntity, PostStatEntity>(
       (s_) => s_.stat, (s_, stat) => s_.copyWith(stat: stat));
-  static final isLiked = Lens<PostEntity, bool>(
-      (s_) => s_.isLiked, (s_, isLiked) => s_.copyWith(isLiked: isLiked));
+  static final liked = Lens<PostEntity, bool>(
+      (s_) => s_.liked, (s_, liked) => s_.copyWith(liked: liked));
 }
 
 // **************************************************************************
@@ -146,7 +146,7 @@ PostEntity _$PostEntityFromJson(Map<String, dynamic> json) {
     stat: json['stat'] == null
         ? null
         : PostStatEntity.fromJson(json['stat'] as Map<String, dynamic>),
-    isLiked: json['isLiked'] as bool ?? false,
+    liked: json['liked'] as bool ?? false,
   );
 }
 
@@ -164,7 +164,7 @@ Map<String, dynamic> _$PostEntityToJson(PostEntity instance) =>
       'images': instance.images,
       'video': instance.video,
       'stat': instance.stat,
-      'isLiked': instance.isLiked,
+      'liked': instance.liked,
     };
 
 T _$enumDecode<T>(
@@ -200,7 +200,7 @@ T _$enumDecodeNullable<T>(
 }
 
 const _$PostTypeEnumMap = {
-  PostType.text: 'text',
-  PostType.image: 'image',
-  PostType.video: 'video',
+  PostType.TEXT: 'TEXT',
+  PostType.IMAGE: 'IMAGE',
+  PostType.VIDEO: 'VIDEO',
 };

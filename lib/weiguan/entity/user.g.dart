@@ -18,7 +18,7 @@ abstract class $UserEntity {
   DateTime get updatedAt;
   FileEntity get avatar;
   UserStatEntity get stat;
-  bool get isFollowing;
+  bool get following;
   const $UserEntity();
   UserEntity copyWith(
           {int id,
@@ -32,7 +32,7 @@ abstract class $UserEntity {
           DateTime updatedAt,
           FileEntity avatar,
           UserStatEntity stat,
-          bool isFollowing}) =>
+          bool following}) =>
       UserEntity(
           id: id ?? this.id,
           username: username ?? this.username,
@@ -45,9 +45,9 @@ abstract class $UserEntity {
           updatedAt: updatedAt ?? this.updatedAt,
           avatar: avatar ?? this.avatar,
           stat: stat ?? this.stat,
-          isFollowing: isFollowing ?? this.isFollowing);
+          following: following ?? this.following);
   String toString() =>
-      "UserEntity(id: $id, username: $username, password: $password, mobile: $mobile, email: $email, avatarId: $avatarId, intro: $intro, createdAt: $createdAt, updatedAt: $updatedAt, avatar: $avatar, stat: $stat, isFollowing: $isFollowing)";
+      "UserEntity(id: $id, username: $username, password: $password, mobile: $mobile, email: $email, avatarId: $avatarId, intro: $intro, createdAt: $createdAt, updatedAt: $updatedAt, avatar: $avatar, stat: $stat, following: $following)";
   bool operator ==(dynamic other) =>
       other.runtimeType == runtimeType &&
       id == other.id &&
@@ -61,7 +61,7 @@ abstract class $UserEntity {
       updatedAt == other.updatedAt &&
       avatar == other.avatar &&
       stat == other.stat &&
-      isFollowing == other.isFollowing;
+      following == other.following;
   @override
   int get hashCode {
     var result = 17;
@@ -76,7 +76,7 @@ abstract class $UserEntity {
     result = 37 * result + updatedAt.hashCode;
     result = 37 * result + avatar.hashCode;
     result = 37 * result + stat.hashCode;
-    result = 37 * result + isFollowing.hashCode;
+    result = 37 * result + following.hashCode;
     return result;
   }
 }
@@ -104,8 +104,8 @@ class UserEntity$ {
       (s_) => s_.avatar, (s_, avatar) => s_.copyWith(avatar: avatar));
   static final stat = Lens<UserEntity, UserStatEntity>(
       (s_) => s_.stat, (s_, stat) => s_.copyWith(stat: stat));
-  static final isFollowing = Lens<UserEntity, bool>((s_) => s_.isFollowing,
-      (s_, isFollowing) => s_.copyWith(isFollowing: isFollowing));
+  static final following = Lens<UserEntity, bool>((s_) => s_.following,
+      (s_, following) => s_.copyWith(following: following));
 }
 
 // **************************************************************************
@@ -133,7 +133,7 @@ UserEntity _$UserEntityFromJson(Map<String, dynamic> json) {
     stat: json['stat'] == null
         ? null
         : UserStatEntity.fromJson(json['stat'] as Map<String, dynamic>),
-    isFollowing: json['isFollowing'] as bool ?? false,
+    following: json['following'] as bool ?? false,
   );
 }
 
@@ -150,5 +150,5 @@ Map<String, dynamic> _$UserEntityToJson(UserEntity instance) =>
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'avatar': instance.avatar,
       'stat': instance.stat,
-      'isFollowing': instance.isFollowing,
+      'following': instance.following,
     };

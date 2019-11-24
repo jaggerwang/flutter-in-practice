@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import '../../../entity/entity.dart';
-import '../../../usecase/exception/exception.dart';
 import '../../../util/util.dart';
 import '../../../container.dart';
 import '../../ui.dart';
@@ -28,29 +27,19 @@ class PostTile extends StatefulWidget {
 
 class _PostTileState extends State<PostTile> {
   void _likePost() async {
-    final cancelLoading = showLoading();
-    try {
+    WgContainer().basePresenter.doWithLoading(() async {
       await WgContainer().postPresenter.like(widget.post.id);
 
       if (widget.onLike != null) widget.onLike();
-    } on UseCaseException catch (e) {
-      showMessage(e.message);
-    } finally {
-      cancelLoading();
-    }
+    });
   }
 
   void _unlikePost() async {
-    final cancelLoading = showLoading();
-    try {
+    WgContainer().basePresenter.doWithLoading(() async {
       await WgContainer().postPresenter.unlike(widget.post.id);
 
       if (widget.onUnlike != null) widget.onUnlike();
-    } on UseCaseException catch (e) {
-      showMessage(e.message);
-    } finally {
-      cancelLoading();
-    }
+    });
   }
 
   void _deletePost() {
@@ -62,23 +51,18 @@ class _PostTileState extends State<PostTile> {
         content: Text('是否确认删除动态？'),
         actions: [
           FlatButton(
-            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            onPressed: () => WgContainer().basePresenter.navigator().pop(),
             child: Text('取消'),
           ),
           FlatButton(
             onPressed: () async {
-              Navigator.of(context, rootNavigator: true).pop();
+              WgContainer().basePresenter.navigator().pop();
 
-              final cancelLoading = showLoading();
-              try {
+              WgContainer().basePresenter.doWithLoading(() async {
                 await WgContainer().postPresenter.delete(widget.post.id);
 
                 if (widget.onDelete != null) widget.onDelete();
-              } on UseCaseException catch (e) {
-                showMessage(e.message);
-              } finally {
-                cancelLoading();
-              }
+              });
             },
             child: Text('确认'),
           ),
@@ -96,12 +80,12 @@ class _PostTileState extends State<PostTile> {
         children: [
           GestureDetector(
             onTap: Feedback.wrapForTap(
-              () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) =>
-                      UserDetailPage(userId: widget.post.userId),
-                ),
-              ),
+              () => WgContainer().basePresenter.navigator().push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          UserDetailPage(userId: widget.post.userId),
+                    ),
+                  ),
               context,
             ),
             child: Row(
@@ -111,7 +95,7 @@ class _PostTileState extends State<PostTile> {
                   backgroundImage: widget.post.user.avatar == null
                       ? null
                       : CachedNetworkImageProvider(
-                          widget.post.user.avatar.thumbs[FileThumbType.small]),
+                          widget.post.user.avatar.thumbs[FileThumbType.SMALL]),
                   child: widget.post.user.avatar == null
                       ? Icon(Icons.person)
                       : null,
@@ -155,11 +139,11 @@ class _PostTileState extends State<PostTile> {
             widget.post.images.length >= 3 ? 3 : widget.post.images.length;
         final width = (constraints.maxWidth - (columns - 1) * margin) / columns;
         final height = width;
-        var thumbType = FileThumbType.small;
+        var thumbType = FileThumbType.SMALL;
         if (widget.post.images.length == 2) {
-          thumbType = FileThumbType.middle;
+          thumbType = FileThumbType.MIDDLE;
         } else if (widget.post.images.length == 1) {
-          thumbType = FileThumbType.large;
+          thumbType = FileThumbType.LARGE;
         }
 
         return Wrap(
@@ -170,12 +154,15 @@ class _PostTileState extends State<PostTile> {
               .entries
               .map((entry) => GestureDetector(
                   onTap: Feedback.wrapForTap(
-                    () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ImagePlayerPage(
-                        images: widget.post.images,
-                        initialIndex: entry.key,
-                      ),
-                    )),
+                    () => WgContainer()
+                        .basePresenter
+                        .navigator()
+                        .push(MaterialPageRoute(
+                          builder: (context) => ImagePlayerPage(
+                            images: widget.post.images,
+                            initialIndex: entry.key,
+                          ),
+                        )),
                     context,
                   ),
                   child: CachedNetworkImage(
@@ -219,7 +206,7 @@ class _PostTileState extends State<PostTile> {
           ),
           Row(
             children: [
-              widget.post.isLiked
+              widget.post.liked
                   ? GestureDetector(
                       onTap: Feedback.wrapForTap(_unlikePost, context),
                       child: Container(
@@ -243,7 +230,7 @@ class _PostTileState extends State<PostTile> {
                       ),
                     ),
               if (widget.post.userId ==
-                  StoreProvider.of<AppState>(context).state.account.user.id)
+                  StoreProvider.of<AppState>(context).state.user.logged.id)
                 GestureDetector(
                   onTap: Feedback.wrapForTap(_deletePost, context),
                   child: Container(

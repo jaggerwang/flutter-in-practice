@@ -124,7 +124,7 @@ T _$enumDecodeNullable<T>(
 }
 
 const _$PostTypeEnumMap = {
-  PostType.text: 'text',
-  PostType.image: 'image',
-  PostType.video: 'video',
+  PostType.TEXT: 'TEXT',
+  PostType.IMAGE: 'IMAGE',
+  PostType.VIDEO: 'VIDEO',
 };

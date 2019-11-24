@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import '../../../entity/entity.dart';
-import '../../../usecase/usecase.dart';
-import '../../../util/util.dart';
 import '../../../container.dart';
 import '../../ui.dart';
 
@@ -23,6 +21,7 @@ class LikedPostsPage extends StatelessWidget {
       body: _Body(
         userId: userId,
       ),
+      bottomNavigationBar: WgTabBar(currentIndex: 2),
     );
   }
 }
@@ -54,8 +53,7 @@ class _BodyState extends State<_Body> {
       return;
     }
 
-    final cancelLoading = showLoading();
-    try {
+    WgContainer().basePresenter.doWithLoading(() async {
       final posts = await WgContainer()
           .postPresenter
           .liked(userId: widget.userId, limit: 10, offset: _likedPosts.length);
@@ -64,11 +62,7 @@ class _BodyState extends State<_Body> {
         _loaded = posts.length < 10;
         _likedPosts.addAll(posts);
       });
-    } on UseCaseException catch (e) {
-      showMessage(e.message);
-    } finally {
-      cancelLoading();
-    }
+    });
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
@@ -90,10 +84,10 @@ class _BodyState extends State<_Body> {
           key: ValueKey(_likedPosts[index].id),
           post: _likedPosts[index],
           onLike: () => setState(() {
-            _likedPosts[index] = _likedPosts[index].copyWith(isLiked: true);
+            _likedPosts[index] = _likedPosts[index].copyWith(liked: true);
           }),
           onUnlike: () => setState(() {
-            _likedPosts[index] = _likedPosts[index].copyWith(isLiked: false);
+            _likedPosts[index] = _likedPosts[index].copyWith(liked: false);
           }),
           onDelete: () => setState(() {
             _likedPosts.removeAt(index);

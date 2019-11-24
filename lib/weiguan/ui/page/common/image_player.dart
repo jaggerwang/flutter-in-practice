@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../entity/entity.dart';
+import '../../../container.dart';
 
 class ImagePlayerPage extends StatelessWidget {
   final List<FileEntity> images;
@@ -23,7 +24,8 @@ class ImagePlayerPage extends StatelessWidget {
 
     return Scaffold(
       body: GestureDetector(
-        onTap: Feedback.wrapForTap(() => Navigator.of(context).pop(), context),
+        onTap: Feedback.wrapForTap(
+            () => WgContainer().basePresenter.navigator().pop(), context),
         child: Container(
           color: Colors.black,
           child: CarouselSlider(

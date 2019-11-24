@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../entity/entity.dart';
-import '../../../usecase/usecase.dart';
-import '../../../util/util.dart';
 import '../../../container.dart';
 import '../../ui.dart';
 
@@ -22,6 +20,7 @@ class FollowerUsersPage extends StatelessWidget {
       body: _Body(
         userId: userId,
       ),
+      bottomNavigationBar: WgTabBar(currentIndex: 2),
     );
   }
 }
@@ -53,20 +52,15 @@ class _BodyState extends State<_Body> {
       return;
     }
 
-    final cancelLoading = showLoading();
-    try {
-      final users = await WgContainer().userPresenter.followers(
+    WgContainer().basePresenter.doWithLoading(() async {
+      final users = await WgContainer().userPresenter.follower(
           userId: widget.userId, limit: 20, offset: _followerUsers.length);
 
       setState(() {
         _loaded = users.length < 20;
         _followerUsers.addAll(users);
       });
-    } on UseCaseException catch (e) {
-      showMessage(e.message);
-    } finally {
-      cancelLoading();
-    }
+    });
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
@@ -90,11 +84,11 @@ class _BodyState extends State<_Body> {
           user: _followerUsers[index],
           onFollow: () => setState(() {
             _followerUsers[index] =
-                _followerUsers[index].copyWith(isFollowing: true);
+                _followerUsers[index].copyWith(following: true);
           }),
           onUnfollow: () => setState(() {
             _followerUsers[index] =
-                _followerUsers[index].copyWith(isFollowing: false);
+                _followerUsers[index].copyWith(following: false);
           }),
         ),
       ),

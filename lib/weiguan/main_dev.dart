@@ -9,10 +9,10 @@ void main() async {
   final container = WgContainer(WgConfig(
     debug: true,
     loggerLevel: Level.ALL,
-    isLogAction: true,
-    isLogApi: true,
-    isMockApi: true,
-    // wgApiBase: 'http://localhost:8000',
+    logAction: true,
+    logApi: true,
+    enableRestApi: false,
+    apiUrlBase: 'http://localhost:8000',
   ));
   await container.onReady;
 

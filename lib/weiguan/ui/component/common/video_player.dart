@@ -7,6 +7,7 @@ import 'package:video_player/video_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../entity/entity.dart';
+import '../../../container.dart';
 import '../../ui.dart';
 
 class VideoPlayerWithControlBar extends StatefulWidget {
@@ -155,15 +156,15 @@ class _VideoPlayerWithControlBarState extends State<VideoPlayerWithControlBar> {
 
   void _toggleFull() {
     if (widget.isFull) {
-      Navigator.of(context).pop();
+      WgContainer().basePresenter.navigator().pop();
     } else {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => VideoPlayerPage(
-          video: widget.video,
-          file: widget.file,
-          controller: _controller,
-        ),
-      ));
+      WgContainer().basePresenter.navigator().push(MaterialPageRoute(
+            builder: (context) => VideoPlayerPage(
+              video: widget.video,
+              file: widget.file,
+              controller: _controller,
+            ),
+          ));
     }
   }
 
@@ -286,7 +287,7 @@ class _VideoPlayerWithCoverState extends State<VideoPlayerWithCover> {
               child: Stack(
                 children: [
                   CachedNetworkImage(
-                      imageUrl: widget.video.thumbs[FileThumbType.large]),
+                      imageUrl: widget.video.thumbs[FileThumbType.LARGE]),
                   Container(
                     alignment: Alignment.center,
                     child: CircleAvatar(

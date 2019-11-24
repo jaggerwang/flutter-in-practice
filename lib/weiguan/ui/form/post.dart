@@ -16,7 +16,7 @@ class PostPublishForm extends $PostPublishForm {
   int videoId;
 
   PostPublishForm({
-    this.type = PostType.image,
+    this.type = PostType.IMAGE,
     this.text = '',
     this.images = const [],
     this.imageIds = const [],

@@ -230,10 +230,10 @@ T _$enumDecodeNullable<T>(
 }
 
 const _$FileThumbTypeEnumMap = {
-  FileThumbType.small: 'small',
-  FileThumbType.middle: 'middle',
-  FileThumbType.large: 'large',
-  FileThumbType.huge: 'huge',
+  FileThumbType.SMALL: 'SMALL',
+  FileThumbType.MIDDLE: 'MIDDLE',
+  FileThumbType.LARGE: 'LARGE',
+  FileThumbType.HUGE: 'HUGE',
 };
 
 FileMetaEntity _$FileMetaEntityFromJson(Map<String, dynamic> json) {

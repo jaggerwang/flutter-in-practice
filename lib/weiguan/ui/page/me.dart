@@ -28,21 +28,31 @@ class _BodyState extends State<_Body> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, UserEntity>(
-      converter: (store) => store.state.account.user,
+      converter: (store) => store.state.user.logged,
       distinct: true,
       builder: (context, vm) {
+        if (vm == null) {
+          return Container();
+        }
+
         return ListView(
           children: [
             Card(
               child: ListTile(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProfilePage(),
-                )),
+                onTap: () => WgContainer()
+                    .basePresenter
+                    .navigator(context)
+                    .push(MaterialPageRoute(
+                      builder: (context) => ProfilePage(),
+                    )),
                 leading: GestureDetector(
                   onTap: Feedback.wrapForTap(
-                    () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => UserDetailPage(userId: vm.id),
-                    )),
+                    () => WgContainer()
+                        .basePresenter
+                        .navigator()
+                        .push(MaterialPageRoute(
+                          builder: (context) => UserDetailPage(userId: vm.id),
+                        )),
                     context,
                   ),
                   child: CircleAvatar(
@@ -50,7 +60,7 @@ class _BodyState extends State<_Body> {
                     backgroundImage: vm.avatar == null
                         ? null
                         : CachedNetworkImageProvider(
-                            vm.avatar.thumbs[FileThumbType.small]),
+                            vm.avatar.thumbs[FileThumbType.SMALL]),
                     child:
                         vm.avatar == null ? Icon(Icons.account_circle) : null,
                   ),
@@ -64,25 +74,36 @@ class _BodyState extends State<_Body> {
               child: Column(
                 children: [
                   ListTile(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LikedPostsPage(userId: vm.id),
-                    )),
+                    onTap: () => WgContainer()
+                        .basePresenter
+                        .navigator(context)
+                        .push(MaterialPageRoute(
+                          builder: (context) => LikedPostsPage(userId: vm.id),
+                        )),
                     title: Text('喜欢'),
                     trailing: Icon(Icons.keyboard_arrow_right),
                   ),
                   Divider(height: 1),
                   ListTile(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => FollowingUsersPage(userId: vm.id),
-                    )),
+                    onTap: () => WgContainer()
+                        .basePresenter
+                        .navigator(context)
+                        .push(MaterialPageRoute(
+                          builder: (context) =>
+                              FollowingUsersPage(userId: vm.id),
+                        )),
                     title: Text('关注'),
                     trailing: Icon(Icons.keyboard_arrow_right),
                   ),
                   Divider(height: 1),
                   ListTile(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => FollowerUsersPage(userId: vm.id),
-                    )),
+                    onTap: () => WgContainer()
+                        .basePresenter
+                        .navigator(context)
+                        .push(MaterialPageRoute(
+                          builder: (context) =>
+                              FollowerUsersPage(userId: vm.id),
+                        )),
                     title: Text('粉丝'),
                     trailing: Icon(Icons.keyboard_arrow_right),
                   ),
@@ -100,14 +121,13 @@ class _BodyState extends State<_Body> {
                     child: RaisedButton(
                       padding:
                           EdgeInsets.all(WgContainer().theme.paddingSizeNormal),
-                      onPressed: () =>
-                          Navigator.of(context, rootNavigator: true)
-                              .pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        BootstrapPage(needLogout: true),
-                                  ),
-                                  (route) => false),
+                      onPressed: () => WgContainer()
+                          .basePresenter
+                          .navigator()
+                          .push(MaterialPageRoute(
+                            builder: (context) =>
+                                BootstrapPage(needLogout: true),
+                          )),
                       color: Theme.of(context).primaryColor,
                       child: Text(
                         '退出',

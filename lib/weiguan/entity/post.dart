@@ -5,15 +5,17 @@ import 'entity.dart';
 
 part 'post.g.dart';
 
-enum PostType { text, image, video }
+enum PostType { TEXT, IMAGE, VIDEO }
+
+enum PostListType { FOLLOWING, HOT }
 
 @JsonSerializable()
 @FunctionalData()
 class PostEntity extends $PostEntity {
   static final typeNames = {
-    PostType.text: '文字',
-    PostType.image: '图片',
-    PostType.video: '视频',
+    PostType.TEXT: '文字',
+    PostType.IMAGE: '图片',
+    PostType.VIDEO: '视频',
   };
 
   final int id;
@@ -29,7 +31,7 @@ class PostEntity extends $PostEntity {
   final FileEntity video;
   final PostStatEntity stat;
   @JsonKey(defaultValue: false)
-  final bool isLiked;
+  final bool liked;
 
   const PostEntity({
     this.id,
@@ -44,7 +46,7 @@ class PostEntity extends $PostEntity {
     this.images,
     this.video,
     this.stat,
-    this.isLiked,
+    this.liked,
   });
 
   factory PostEntity.fromJson(Map<String, dynamic> json) =>
