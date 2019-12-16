@@ -200,12 +200,6 @@ class WeiguanGraphQLService implements WeiguanService {
     return fields.join(' ');
   }
 
-  void decodeFileThumbs(Map<String, dynamic> file) {
-    if ((file ?? {})['thumbs'] != null) {
-      file['thumbs'] = jsonDecode(file['thumbs']);
-    }
-  }
-
   String userStatFields({
     bool id: true,
     bool userId: true,
@@ -284,7 +278,6 @@ query {
     if (response['userLogged'] == null) {
       return null;
     }
-    decodeFileThumbs(response['userLogged']['avatar']);
     return UserEntity.fromJson(response['userLogged']);
   }
 
@@ -320,7 +313,6 @@ query(\$id: Int!) {
     final response = await get(query, variables: {
       'id': id,
     });
-    decodeFileThumbs(response['userInfo']['avatar']);
     return UserEntity.fromJson(response['userInfo']);
   }
 
@@ -360,7 +352,6 @@ query(\$userId: Int, \$limit: Int, \$offset: Int) {
     });
     return (response['userFollowing'] as List<dynamic>).map((v) {
       v['following'] = true;
-      decodeFileThumbs(v['avatar']);
       return UserEntity.fromJson(v);
     }).toList();
   }
@@ -377,10 +368,9 @@ query(\$userId: Int, \$limit: Int, \$offset: Int) {
       'limit': limit,
       'offset': offset,
     });
-    return (response['userFollower'] as List<dynamic>).map((v) {
-      decodeFileThumbs(v['avatar']);
-      return UserEntity.fromJson(v);
-    }).toList();
+    return (response['userFollower'] as List<dynamic>)
+        .map((v) => UserEntity.fromJson(v))
+        .toList();
   }
 
   @override
@@ -428,10 +418,6 @@ query(\$id: Int!) {
     final response = await get(query, variables: {
       'id': id,
     });
-    decodeFileThumbs(response['postInfo']['user']['avatar']);
-    for (var image in response['postInfo']['images']) {
-      decodeFileThumbs(image);
-    }
     return PostEntity.fromJson(response['postInfo']);
   }
 
@@ -447,13 +433,9 @@ query(\$userId: Int, \$limit: Int, \$offset: Int) {
       'limit': limit,
       'offset': offset,
     });
-    return (response['postPublished'] as List<dynamic>).map((v) {
-      decodeFileThumbs(v['user']['avatar']);
-      for (var image in v['images']) {
-        decodeFileThumbs(image);
-      }
-      return PostEntity.fromJson(v);
-    }).toList();
+    return (response['postPublished'] as List<dynamic>)
+        .map((v) => PostEntity.fromJson(v))
+        .toList();
   }
 
   @override
@@ -492,10 +474,6 @@ query(\$userId: Int, \$limit: Int, \$offset: Int) {
     });
     return (response['postLiked'] as List<dynamic>).map((v) {
       v['liked'] = true;
-      decodeFileThumbs(v['user']['avatar']);
-      for (var image in v['images']) {
-        decodeFileThumbs(image);
-      }
       return PostEntity.fromJson(v);
     }).toList();
   }
@@ -512,13 +490,9 @@ query(\$limit: Int, \$beforeId: Int, \$afterId: Int) {
       'beforeId': beforeId,
       'afterId': afterId,
     });
-    return (response['postFollowing'] as List<dynamic>).map((v) {
-      decodeFileThumbs(v['user']['avatar']);
-      for (var image in v['images']) {
-        decodeFileThumbs(image);
-      }
-      return PostEntity.fromJson(v);
-    }).toList();
+    return (response['postFollowing'] as List<dynamic>)
+        .map((v) => PostEntity.fromJson(v))
+        .toList();
   }
 
   @override

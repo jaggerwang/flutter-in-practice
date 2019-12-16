@@ -6,6 +6,8 @@ import 'config.dart';
 import 'container.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final container = WgContainer(WgConfig(
     debug: true,
     loggerLevel: Level.ALL,

@@ -5,6 +5,8 @@ import 'config.dart';
 import 'container.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final container = WgContainer(WgConfig(
     enableRestApi: false,
     apiUrlBase: 'http://localhost:8000',
