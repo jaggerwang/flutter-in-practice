@@ -14,7 +14,8 @@ void main() async {
     logAction: true,
     logApi: true,
     enableRestApi: false,
-    apiUrlBase: 'http://localhost:8000',
+    enableGraphQLApi: false,
+    apiBaseUrl: 'http://localhost:8080',
   ));
   await container.onReady;
 

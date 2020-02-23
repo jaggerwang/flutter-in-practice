@@ -34,7 +34,10 @@ class WeiguanGraphQLService implements WeiguanService {
         path,
         queryParameters: method == 'GET' ? data : null,
         data: method == 'POST' ? data : null,
-        options: Options(method: method),
+        options: Options(method: method,
+            // Graphql java not accept content type with charset
+            // see more on https://github.com/graphql-java/graphql-java-spring/issues/16
+            headers: {'content-type': 'application/json'}),
       );
     } catch (e) {
       throw ServiceException('fail', '$e');
@@ -46,7 +49,8 @@ class WeiguanGraphQLService implements WeiguanService {
     final result = {'code': 'ok', 'message': '', 'data': response.data['data']};
     if ((response.data['errors'] ?? []).length > 0) {
       final error = (response.data['errors'] as List)[0];
-      result['code'] = error['type'];
+      final extensions = (error['extensions'] ?? {}) as Map;
+      result['code'] = extensions['code'] ?? 'fail';
       result['message'] = error['message'];
     }
 

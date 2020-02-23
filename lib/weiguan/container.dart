@@ -138,7 +138,7 @@ class WgContainer {
     _injector.registerSingleton<WeiguanService>((injector) {
       final createClient = () {
         final client = Dio();
-        client.options.baseUrl = config.apiUrlBase;
+        client.options.baseUrl = config.apiBaseUrl;
         client.interceptors.add(CookieManager(
             PersistCookieJar(dir: '${config.appDocDir.path}/cookies')));
         return client;

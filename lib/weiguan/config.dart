@@ -10,7 +10,7 @@ class WgConfig {
   bool logApi;
   bool enableRestApi;
   bool enableGraphQLApi;
-  String apiUrlBase;
+  String apiBaseUrl;
   bool persistState;
   PackageInfo packageInfo;
   Directory appDocDir;
@@ -22,7 +22,7 @@ class WgConfig {
     this.logApi = false,
     this.enableRestApi = false,
     this.enableGraphQLApi = false,
-    this.apiUrlBase = 'https://weiguan.app/api',
+    this.apiBaseUrl = '',
     this.persistState = true,
   });
 }
