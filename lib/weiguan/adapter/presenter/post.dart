@@ -4,6 +4,7 @@ import 'package:redux/redux.dart';
 import '../../entity/entity.dart';
 import '../../ui/ui.dart';
 import '../../usecase/usecase.dart';
+import '../../config.dart';
 import 'base.dart';
 
 class PostPresenter extends BasePresenter {
@@ -11,10 +12,11 @@ class PostPresenter extends BasePresenter {
   PostUsecases postUsecases;
 
   PostPresenter({
+    @required WgConfig config,
     @required Store<AppState> appStore,
     @required this.weiguanService,
     @required this.postUsecases,
-  }) : super(appStore: appStore);
+  }) : super(config: config, appStore: appStore);
 
   Future<PostEntity> publish(PostPublishForm form) async {
     final post = await postUsecases.publish(

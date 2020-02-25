@@ -49,5 +49,21 @@
 		<string>发布动态时拍摄相片或视频</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>发布动态时拍摄视频</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>net.jaggerwang.fip</string>
+				</array>
+			</dict>
+		</array>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true />
+		</dict>
 	</dict>
 </plist>

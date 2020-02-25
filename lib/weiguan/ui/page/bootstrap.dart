@@ -39,9 +39,18 @@ class _BodyState extends State<_Body> {
       }
 
       final user = await WgContainer().userPresenter.logged();
+      if (user != null) {
+        WgContainer()
+            .basePresenter
+            .navigator()
+            .pushNamedAndRemoveUntil('/tab', (route) => false);
+        return;
+      }
 
+      final config = WgContainer().config;
       WgContainer().basePresenter.navigator().pushNamedAndRemoveUntil(
-          user == null ? '/login' : '/tab', (route) => false);
+          config.enableOAuth2Login ? '/oauth2_login' : '/login',
+          (route) => false);
     });
   }
 

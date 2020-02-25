@@ -4,15 +4,17 @@ import 'package:package_info/package_info.dart';
 import 'package:redux/redux.dart';
 import 'package:bot_toast/bot_toast.dart';
 
-import '../container.dart';
+import '../config.dart';
 import 'ui.dart';
 
 class WgApp extends StatelessWidget {
+  final WgConfig config;
   final Store<AppState> store;
   final PackageInfo packageInfo;
   final ThemeData theme;
 
   WgApp({
+    @required this.config,
     @required this.store,
     @required this.packageInfo,
     @required this.theme,
@@ -26,12 +28,13 @@ class WgApp extends StatelessWidget {
         child: MaterialApp(
           title: packageInfo.appName,
           theme: theme,
-          navigatorKey: WgContainer().rootNavigatorKey,
+          navigatorKey: config.rootNavigatorKey,
           navigatorObservers: [BotToastNavigatorObserver()],
           routes: {
             '/': (context) => BootstrapPage(),
             '/register': (context) => RegisterPage(),
             '/login': (context) => LoginPage(),
+            '/oauth2_login': (context) => OAuth2LoginPage(),
             '/tab': (context) => TabPage(),
           },
         ),

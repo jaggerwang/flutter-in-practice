@@ -38,6 +38,9 @@ android {
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders = [
+            'appAuthRedirectScheme': 'net.jaggerwang.fip'
+        ]
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

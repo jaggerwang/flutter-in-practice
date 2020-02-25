@@ -6,8 +6,9 @@ export 'user/detail.dart';
 export 'user/follower_users.dart';
 export 'user/following_users.dart';
 export 'user/liked_posts.dart';
-export 'user/modify_mobile.dart';
 export 'user/login.dart';
+export 'user/modify_mobile.dart';
+export 'user/oauth2_login.dart';
 export 'user/profile.dart';
 export 'user/register.dart';
 

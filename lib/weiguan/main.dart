@@ -11,6 +11,7 @@ void main() async {
   await container.onReady;
 
   runApp(WgApp(
+    config: container.config,
     store: container.appStore,
     packageInfo: container.config.packageInfo,
     theme: container.theme.themeData,

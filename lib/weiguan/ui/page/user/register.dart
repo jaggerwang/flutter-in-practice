@@ -47,7 +47,7 @@ class _BodyState extends State<_Body> {
       WgContainer().basePresenter.doWithLoading(() async {
         await WgContainer().userPresenter.register(_form);
 
-        WgContainer().basePresenter.navigator().pushReplacementNamed('/tab');
+        WgContainer().basePresenter.navigator().pushReplacementNamed('/');
       });
     }
   }

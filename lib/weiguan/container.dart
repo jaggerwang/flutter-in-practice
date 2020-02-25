@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:logging/logging.dart';
 import 'package:redux/redux.dart';
@@ -41,9 +40,7 @@ class WgContainer {
 
       registerTheme();
 
-      registerNavigatorKeys();
-
-      registerAppState();
+      registerInitialAppState();
 
       await registerAppStore();
 
@@ -101,24 +98,13 @@ class WgContainer {
     return _injector.getDependency<WgTheme>();
   }
 
-  void registerNavigatorKeys() {
-    _injector.registerSingleton<GlobalKey<NavigatorState>>((injector) {
-      return GlobalKey<NavigatorState>();
-    }, dependencyName: 'root');
-  }
-
-  GlobalKey<NavigatorState> get rootNavigatorKey {
-    return _injector.getDependency<GlobalKey<NavigatorState>>(
-        dependencyName: 'root');
-  }
-
-  void registerAppState() {
+  void registerInitialAppState() {
     _injector.registerDependency<AppState>((injector) {
       return AppState(version: _config.packageInfo.version);
     });
   }
 
-  AppState get appState {
+  AppState get initialAppState {
     return _injector.getDependency<AppState>();
   }
 
@@ -147,12 +133,14 @@ class WgContainer {
       if (config.enableRestApi) {
         return WeiguanRestService(
           config: config,
+          appStore: appStore,
           logger: apiLogger,
           client: createClient(),
         );
       } else if (config.enableGraphQLApi) {
         return WeiguanGraphQLService(
           config: config,
+          appStore: appStore,
           logger: apiLogger,
           client: createClient(),
         );
@@ -189,11 +177,12 @@ class WgContainer {
 
   void registerPresenters() {
     _injector.registerSingleton<BasePresenter>((injector) {
-      return BasePresenter(appStore: appStore);
+      return BasePresenter(config: config, appStore: appStore);
     });
 
     _injector.registerSingleton<UserPresenter>((injector) {
       return UserPresenter(
+          config: config,
           appStore: appStore,
           weiguanService: weiguanService,
           userUsecases: userUsecases);
@@ -201,6 +190,7 @@ class WgContainer {
 
     _injector.registerSingleton<PostPresenter>((injector) {
       return PostPresenter(
+          config: config,
           appStore: appStore,
           weiguanService: weiguanService,
           postUsecases: postUsecases);

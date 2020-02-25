@@ -6,18 +6,22 @@ import 'package:meta/meta.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 import 'package:mime/mime.dart';
+import 'package:redux/redux.dart';
 
 import '../../entity/entity.dart';
+import '../../ui/ui.dart';
 import '../../usecase/usecase.dart';
 import '../../config.dart';
 
 class WeiguanRestService implements WeiguanService {
   final WgConfig config;
+  final Store<AppState> appStore;
   final Logger logger;
   final Dio client;
 
   WeiguanRestService({
     @required this.config,
+    @required this.appStore,
     @required this.logger,
     @required this.client,
   });
@@ -29,6 +33,12 @@ class WeiguanRestService implements WeiguanService {
     }
     Response response;
     try {
+      final Map<String, dynamic> headers = {};
+      final oAuth2State = appStore.state.oauth2;
+      if (config.enableOAuth2Login && oAuth2State.accessToken != null) {
+        headers['authorization'] = 'Bearer ' + oAuth2State.accessToken;
+      }
+
       response = await client.request(
         path,
         queryParameters: method == 'GET' ? data : null,

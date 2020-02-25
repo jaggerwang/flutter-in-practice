@@ -4,6 +4,7 @@ import 'package:redux/redux.dart';
 import '../../entity/entity.dart';
 import '../../ui/ui.dart';
 import '../../usecase/usecase.dart';
+import '../../config.dart';
 import 'base.dart';
 
 class UserPresenter extends BasePresenter {
@@ -11,26 +12,19 @@ class UserPresenter extends BasePresenter {
   UserUsecases userUsecases;
 
   UserPresenter({
+    @required WgConfig config,
     @required Store<AppState> appStore,
     @required this.weiguanService,
     @required this.userUsecases,
-  }) : super(appStore: appStore);
+  }) : super(config: config, appStore: appStore);
 
   Future<UserEntity> login(UserLoginForm form) async {
-    final user = await weiguanService.userLogin(form.username, form.password);
-
-    await logged();
-
-    return user;
+    return await weiguanService.userLogin(form.username, form.password);
   }
 
   Future<UserEntity> register(UserRegisterForm form) async {
-    final user = await weiguanService.userRegister(
+    return await weiguanService.userRegister(
         UserEntity(username: form.username, password: form.password));
-
-    await logged();
-
-    return user;
   }
 
   Future<UserEntity> logged() async {
@@ -41,12 +35,12 @@ class UserPresenter extends BasePresenter {
     return user;
   }
 
-  Future<UserEntity> logout() async {
-    final user = await weiguanService.userLogout();
+  Future<void> logout() async {
+    if (!config.enableOAuth2Login) {
+      await weiguanService.userLogout();
+    }
 
     dispatchAction(ResetAction());
-
-    return user;
   }
 
   Future<UserEntity> modify(UserProfileForm form) async {

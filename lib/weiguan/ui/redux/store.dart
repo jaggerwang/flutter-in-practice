@@ -8,8 +8,8 @@ import '../../container.dart';
 import 'redux.dart';
 
 Future<Store<AppState>> createStore() async {
-  var initialState = WgContainer().appState;
   final config = WgContainer().config;
+  var initialState = WgContainer().initialAppState;
   final actionLogger = WgContainer().actionLogger;
 
   final List<Middleware<AppState>> wms = [];

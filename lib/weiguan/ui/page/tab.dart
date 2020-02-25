@@ -10,9 +10,8 @@ class TabPage extends StatefulWidget {
 }
 
 class _TabPageState extends State<TabPage> {
-  static final _navigatorKeys =
+  final _navigatorKeys =
       WgTabBar.tabs.map((v) => GlobalKey<NavigatorState>()).toList();
-
   var _tab = 0;
 
   bool _handleSwitchTabNotification(SwitchTabNotification notification) {

@@ -7,18 +7,22 @@ import 'package:meta/meta.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 import 'package:mime/mime.dart';
+import 'package:redux/redux.dart';
 
 import '../../entity/entity.dart';
+import '../../ui/ui.dart';
 import '../../usecase/usecase.dart';
 import '../../config.dart';
 
 class WeiguanGraphQLService implements WeiguanService {
   final WgConfig config;
+  final Store<AppState> appStore;
   final Logger logger;
   final Dio client;
 
   WeiguanGraphQLService({
     @required this.config,
+    @required this.appStore,
     @required this.logger,
     @required this.client,
   });
@@ -30,14 +34,20 @@ class WeiguanGraphQLService implements WeiguanService {
     }
     Response response;
     try {
+      final Map<String, dynamic> headers = {};
+      // Graphql java not accept content type with charset
+      // see more on https://github.com/graphql-java/graphql-java-spring/issues/16
+      headers['content-type'] = 'application/json';
+      final oAuth2State = appStore.state.oauth2;
+      if (config.enableOAuth2Login && oAuth2State.accessToken != null) {
+        headers['authorization'] = 'Bearer ' + oAuth2State.accessToken;
+      }
+
       response = await client.request(
         path,
         queryParameters: method == 'GET' ? data : null,
         data: method == 'POST' ? data : null,
-        options: Options(method: method,
-            // Graphql java not accept content type with charset
-            // see more on https://github.com/graphql-java/graphql-java-spring/issues/16
-            headers: {'content-type': 'application/json'}),
+        options: Options(method: method, headers: headers),
       );
     } catch (e) {
       throw ServiceException('fail', '$e');
@@ -168,7 +178,7 @@ class WeiguanGraphQLService implements WeiguanService {
     bool region: true,
     bool bucket: true,
     bool path: true,
-    String meta,
+    String meta: 'name size type',
     bool createdAt: true,
     bool updatedAt: true,
     String user,

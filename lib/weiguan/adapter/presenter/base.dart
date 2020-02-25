@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter_in_practice/weiguan/config.dart';
 import 'package:redux/redux.dart';
 
 import '../../entity/entity.dart';
 import '../../ui/ui.dart';
 import '../../usecase/usecase.dart';
-import '../../container.dart';
 
 class BasePresenter {
+  WgConfig config;
   Store<AppState> appStore;
 
-  BasePresenter({@required this.appStore});
+  BasePresenter({
+    @required this.config,
+    @required this.appStore,
+  });
 
   NavigatorState navigator([BuildContext context]) {
     return context == null
-        ? WgContainer().rootNavigatorKey.currentState
+        ? config.rootNavigatorKey.currentState
         : Navigator.of(context);
   }
 

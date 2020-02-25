@@ -16,10 +16,19 @@ void main() async {
     enableRestApi: false,
     enableGraphQLApi: false,
     apiBaseUrl: 'http://localhost:8080',
+    enableOAuth2Login: false,
+    oAuth2Config: OAuth2Config(
+      clientId: 'fip',
+      redirectUrl: 'net.jaggerwang.fip:/login/oauth2/code/hydra',
+      authorizationEndpoint: 'http://localhost:4444/oauth2/auth',
+      tokenEndpoint: 'http://localhost:4444/oauth2/token',
+      scopes: ['offline', 'user', 'post', 'file', 'stat'],
+    ),
   ));
   await container.onReady;
 
   runApp(WgApp(
+    config: container.config,
     store: container.appStore,
     packageInfo: container.config.packageInfo,
     theme: container.theme.themeData,
