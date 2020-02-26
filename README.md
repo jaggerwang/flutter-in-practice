@@ -64,28 +64,72 @@ apple_ios_simulator • iOS Simulator • Apple  • ios
 $ flutter emulators --launch apple_ios_simulator
 ```
 
-### Run app
-
-This repository contains several apps.
-
-To run flutter demo:
+### Run Flutter Demo
 
 ```bash
 flutter run -t lib/demo/main.dart
 ```
 
-To run weiguan:
+### Run Weiguan APP
 
 ```bash
 flutter run -t lib/weiguan/mobile/main.dart
 ```
 
-The weiguan app need a backend api service, as default it will use a mocked api service. You can enable `enableRestApi` option to use a real service from [Sanic in Practice](https://github.com/jaggerwang/sanic-in-practice) or [Spring Boot in Practice](https://github.com/jaggerwang/spring-boot-in-practice). The later one also supplys a graphql api service, you can enable `enableGraphQLApi` option to use it.
+Weiguan app needs a api service to get and post data. It use mock apis by default, but you can configure it to use a real REST or GraphQL api service. For development purpose, you should configure and run main file `main_dev.dart`.
 
-If you want to see more log info, you can run weiguan in dev mode:
+#### Use [Sanic in Practice](https://github.com/jaggerwang/sanic-in-practice) REST api service.
+
+```dart
+  final container = WgContainer(WgConfig(
+    enableRestApi: true,
+    apiBaseUrl: 'http://localhost:8000',
+  ));
+```
+
+#### Use [Spring Boot in Practice](https://github.com/jaggerwang/spring-boot-in-practice) REST api service.
+
+```dart
+  final container = WgContainer(WgConfig(
+    enableRestApi: true,
+    apiBaseUrl: 'http://localhost:8080',
+  ));
+```
+
+#### Use [Spring Boot in Practice](https://github.com/jaggerwang/spring-boot-in-practice) GraphQL api service.
+
+```dart
+  final container = WgContainer(WgConfig(
+    enableGraphQLApi: true,
+    apiBaseUrl: 'http://localhost:8080',
+  ));
+```
+
+#### Use [Spring Cloud in Practice](https://github.com/jaggerwang/spring-cloud-in-practice) GraphQL api service.
+
+This api service only support GraphQL protocol, and it uses OAuth2 login. You should change the ports in the following steps if you run this api service by docker compose.
+
+First you need create a client for this app.
 
 ```bash
-flutter run -t lib/weiguan/mobile/main_dev.dart
+hydra --endpoint 'http://localhost:4445/' clients create --id fip --name 'Flutter in Practice' --grant-types authorization_code,refresh_token --response-types token,code --scope offline,user,post,file,stat --token-endpoint-auth-method none --callbacks 'net.jaggerwang.fip:/login/oauth2/code/hydra'
+```
+
+Then configure as following:
+
+```dart
+  final container = WgContainer(WgConfig(
+    enableGraphQLApi: true,
+    apiBaseUrl: 'http://localhost:8080',
+    enableOAuth2Login: true,
+    oAuth2Config: OAuth2Config(
+      clientId: 'fip',
+      redirectUrl: 'net.jaggerwang.fip:/login/oauth2/code/hydra',
+      authorizationEndpoint: 'http://localhost:4444/oauth2/auth',
+      tokenEndpoint: 'http://localhost:4444/oauth2/token',
+      scopes: ['offline', 'user', 'post', 'file', 'stat'],
+    ),
+  ));
 ```
 
 > The video player can not work on iOS simulator, you should use an Android emulator or a real device.
