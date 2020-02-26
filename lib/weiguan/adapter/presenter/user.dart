@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:redux/redux.dart';
+import 'package:logging/logging.dart';
 
 import '../../entity/entity.dart';
 import '../../ui/ui.dart';
@@ -14,9 +15,10 @@ class UserPresenter extends BasePresenter {
   UserPresenter({
     @required WgConfig config,
     @required Store<AppState> appStore,
+    @required Logger logger,
     @required this.weiguanService,
     @required this.userUsecases,
-  }) : super(config: config, appStore: appStore);
+  }) : super(config: config, appStore: appStore, logger: logger);
 
   Future<UserEntity> login(UserLoginForm form) async {
     return await weiguanService.userLogin(form.username, form.password);

@@ -177,13 +177,18 @@ class WgContainer {
 
   void registerPresenters() {
     _injector.registerSingleton<BasePresenter>((injector) {
-      return BasePresenter(config: config, appStore: appStore);
+      return BasePresenter(
+        config: config,
+        appStore: appStore,
+        logger: appLogger,
+      );
     });
 
     _injector.registerSingleton<UserPresenter>((injector) {
       return UserPresenter(
           config: config,
           appStore: appStore,
+          logger: appLogger,
           weiguanService: weiguanService,
           userUsecases: userUsecases);
     });
@@ -192,6 +197,7 @@ class WgContainer {
       return PostPresenter(
           config: config,
           appStore: appStore,
+          logger: appLogger,
           weiguanService: weiguanService,
           postUsecases: postUsecases);
     });

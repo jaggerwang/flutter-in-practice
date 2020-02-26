@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:redux/redux.dart';
+import 'package:logging/logging.dart';
 
 import '../../entity/entity.dart';
 import '../../ui/ui.dart';
@@ -14,9 +15,10 @@ class PostPresenter extends BasePresenter {
   PostPresenter({
     @required WgConfig config,
     @required Store<AppState> appStore,
+    @required Logger logger,
     @required this.weiguanService,
     @required this.postUsecases,
-  }) : super(config: config, appStore: appStore);
+  }) : super(config: config, appStore: appStore, logger: logger);
 
   Future<PostEntity> publish(PostPublishForm form) async {
     final post = await postUsecases.publish(

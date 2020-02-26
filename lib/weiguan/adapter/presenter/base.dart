@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter_in_practice/weiguan/config.dart';
 import 'package:redux/redux.dart';
+import 'package:logging/logging.dart';
 
 import '../../entity/entity.dart';
 import '../../ui/ui.dart';
@@ -10,10 +11,12 @@ import '../../usecase/usecase.dart';
 class BasePresenter {
   WgConfig config;
   Store<AppState> appStore;
+  Logger logger;
 
   BasePresenter({
     @required this.config,
     @required this.appStore,
+    @required this.logger,
   });
 
   NavigatorState navigator([BuildContext context]) {
@@ -27,6 +30,7 @@ class BasePresenter {
   }
 
   void handleException(Exception e) {
+    logger.severe(e.toString());
     if (e is UnauthenticatedException) {
       showNotification("您的登录已过期，点击通知可重新登录。",
           onTap: () =>

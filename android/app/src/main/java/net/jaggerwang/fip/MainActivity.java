@@ -1,4 +1,4 @@
-package net.jaggerwang.flutter_in_practice;
+package net.jaggerwang.fip;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

@@ -37,6 +37,7 @@ class _BodyState extends State<_Body> {
         ),
         scopes: config.oAuth2Config.scopes,
         refreshToken: oAuth2State.refreshToken,
+        allowInsecureConnections: true,
       ));
 
       if (response.accessToken != null) {
@@ -62,6 +63,7 @@ class _BodyState extends State<_Body> {
         config.oAuth2Config.tokenEndpoint,
       ),
       scopes: config.oAuth2Config.scopes,
+      allowInsecureConnections: true,
     ));
     if (response.accessToken != null) {
       WgContainer().basePresenter.dispatchAction(OAuth2StateAction(
