@@ -3,10 +3,10 @@ import 'package:redux/redux.dart';
 import '../../ui.dart';
 
 final userReducer = combineReducers<UserState>([
-  TypedReducer<UserState, UserLoggedAction>(_info),
+  TypedReducer<UserState, UserLoggedAction>(_logged),
 ]);
 
-UserState _info(UserState state, UserLoggedAction action) {
+UserState _logged(UserState state, UserLoggedAction action) {
   return state.copyWith(
     logged: action.user,
   );
