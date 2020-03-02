@@ -1,6 +1,6 @@
 # Flutter in Practice
 
-This project is the reference source code of online video course [叽歪课程 - Flutter 移动应用开发实战](https://blog.jaggerwang.net/jwcourse-flutter-mobile-app-develop-in-practice/), including usage demo of flutter components and a social video app weiguan like tiktok.
+This project can be used as a starter for flutter app development, including a demo app for learning flutter components and a social video app named weiguan whick is similar to TikTok. There is also an article [Flutter 移动应用开发指南](https://blog.jaggerwang.net/flutter-mobile-app-develop-tour/) for learning this project.
 
 > To students of course: 最新的实战项目目录结构已按照新版 [干净架构最佳实践](https://blog.jaggerwang.net/clean-architecture-in-practice/) 进行了重构，目录结构调整较大。如想获取之前版本，可查看提交记录。
 
