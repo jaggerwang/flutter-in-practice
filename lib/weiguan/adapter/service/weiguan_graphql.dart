@@ -259,6 +259,44 @@ class WeiguanGraphQLService implements WeiguanService {
   }
 
   @override
+  Future<UserEntity> authLogin(String username, String password) async {
+    final query = '''
+mutation(\$user: UserInput!) {
+  authLogin(user: \$user) { ${userFields()} }
+}''';
+    final response = await post(query, variables: {
+      'user': {'username': username, 'password': password},
+    });
+    return UserEntity.fromJson(response['authLogin']);
+  }
+
+  @override
+  Future<UserEntity> authLogout() async {
+    final query = '''
+query {
+  authLogout { ${userFields()} }
+}''';
+    final response = await get(query);
+    if (response['authLogout'] == null) {
+      return null;
+    }
+    return UserEntity.fromJson(response['authLogout']);
+  }
+
+  @override
+  Future<UserEntity> authLogged() async {
+    final query = '''
+query {
+  authLogged { ${userFields(avatar: fileFields())} }
+}''';
+    final response = await get(query);
+    if (response['authLogged'] == null) {
+      return null;
+    }
+    return UserEntity.fromJson(response['authLogged']);
+  }
+
+  @override
   Future<UserEntity> userRegister(UserEntity userEntity) async {
     final query = '''
 mutation(\$user: UserInput!) {
@@ -268,41 +306,6 @@ mutation(\$user: UserInput!) {
       'user': userEntity.toJson()..removeWhere((k, v) => v == null),
     });
     return UserEntity.fromJson(response['userRegister']);
-  }
-
-  @override
-  Future<UserEntity> userLogin(String username, String password) async {
-    final query = '''
-mutation(\$user: UserInput!) {
-  userLogin(user: \$user) { ${userFields()} }
-}''';
-    final response = await post(query, variables: {
-      'user': {'username': username, 'password': password},
-    });
-    return UserEntity.fromJson(response['userLogin']);
-  }
-
-  @override
-  Future<UserEntity> userLogged() async {
-    final query = '''
-query {
-  userLogged { ${userFields(avatar: fileFields())} }
-}''';
-    final response = await get(query);
-    if (response['userLogged'] == null) {
-      return null;
-    }
-    return UserEntity.fromJson(response['userLogged']);
-  }
-
-  @override
-  Future<UserEntity> userLogout() async {
-    final query = '''
-query {
-  userLogout { ${userFields()} }
-}''';
-    final response = await get(query);
-    return UserEntity.fromJson(response['userLogout']);
   }
 
   @override

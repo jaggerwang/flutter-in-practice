@@ -85,7 +85,7 @@ class WeiguanMockService implements WeiguanService {
   }
 
   @override
-  Future<UserEntity> userRegister(UserEntity userEntity) async {
+  Future<UserEntity> authLogin(String username, String password) async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
@@ -102,16 +102,17 @@ class WeiguanMockService implements WeiguanService {
   }
 
   @override
-  Future<UserEntity> userLogin(String username, String password) async {
+  Future<UserEntity> authLogout() async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
       ),
       () {
-        _userId = 1;
+        final user = _users[_userId];
+        _userId = null;
 
         return {
-          'user': _users[_userId],
+          'user': user,
         };
       },
     );
@@ -119,7 +120,7 @@ class WeiguanMockService implements WeiguanService {
   }
 
   @override
-  Future<UserEntity> userLogged() async {
+  Future<UserEntity> authLogged() async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
@@ -135,17 +136,16 @@ class WeiguanMockService implements WeiguanService {
   }
 
   @override
-  Future<UserEntity> userLogout() async {
+  Future<UserEntity> userRegister(UserEntity userEntity) async {
     final response = await Future.delayed(
       Duration(
         milliseconds: 500 + _random.nextInt(500),
       ),
       () {
-        final user = _users[_userId];
-        _userId = null;
+        _userId = 1;
 
         return {
-          'user': user,
+          'user': _users[_userId],
         };
       },
     );

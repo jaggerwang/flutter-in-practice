@@ -1,13 +1,13 @@
 import '../../../entity/entity.dart';
 
 abstract class WeiguanService {
+  Future<UserEntity> authLogin(String username, String password);
+
+  Future<UserEntity> authLogged();
+
+  Future<UserEntity> authLogout();
+
   Future<UserEntity> userRegister(UserEntity userEntity);
-
-  Future<UserEntity> userLogin(String username, String password);
-
-  Future<UserEntity> userLogged();
-
-  Future<UserEntity> userLogout();
 
   Future<UserEntity> userModify(UserEntity userEntity, [String code]);
 

@@ -87,29 +87,29 @@ class WeiguanRestService implements WeiguanService {
   }
 
   @override
-  Future<UserEntity> userRegister(UserEntity userEntity) async {
-    final response = await post('/user/register', userEntity.toJson());
-    return UserEntity.fromJson(response['user']);
-  }
-
-  @override
-  Future<UserEntity> userLogin(String username, String password) async {
+  Future<UserEntity> authLogin(String username, String password) async {
     final response =
-        await post('/user/login', {'username': username, 'password': password});
+        await post('/auth/login', {'username': username, 'password': password});
     return UserEntity.fromJson(response['user']);
   }
 
   @override
-  Future<UserEntity> userLogged() async {
-    final response = await get('/user/logged');
+  Future<UserEntity> authLogged() async {
+    final response = await get('/auth/logged');
     return response['user'] == null
         ? response['user']
         : UserEntity.fromJson(response['user']);
   }
 
   @override
-  Future<UserEntity> userLogout() async {
-    final response = await get('/user/logout');
+  Future<UserEntity> authLogout() async {
+    final response = await get('/auth/logout');
+    return UserEntity.fromJson(response['user']);
+  }
+
+  @override
+  Future<UserEntity> userRegister(UserEntity userEntity) async {
+    final response = await post('/user/register', userEntity.toJson());
     return UserEntity.fromJson(response['user']);
   }
 

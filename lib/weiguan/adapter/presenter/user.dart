@@ -21,28 +21,28 @@ class UserPresenter extends BasePresenter {
   }) : super(config: config, appStore: appStore, logger: logger);
 
   Future<UserEntity> login(UserLoginForm form) async {
-    return await weiguanService.userLogin(form.username, form.password);
+    return await weiguanService.authLogin(form.username, form.password);
   }
 
-  Future<UserEntity> register(UserRegisterForm form) async {
-    return await weiguanService.userRegister(
-        UserEntity(username: form.username, password: form.password));
+  Future<void> logout() async {
+    if (!config.enableOAuth2Login) {
+      await weiguanService.authLogout();
+    }
+
+    dispatchAction(ResetAction());
   }
 
   Future<UserEntity> logged() async {
-    final user = await weiguanService.userLogged();
+    final user = await weiguanService.authLogged();
 
     dispatchAction(UserLoggedAction(user: user));
 
     return user;
   }
 
-  Future<void> logout() async {
-    if (!config.enableOAuth2Login) {
-      await weiguanService.userLogout();
-    }
-
-    dispatchAction(ResetAction());
+  Future<UserEntity> register(UserRegisterForm form) async {
+    return await weiguanService.userRegister(
+        UserEntity(username: form.username, password: form.password));
   }
 
   Future<UserEntity> modify(UserProfileForm form) async {
