@@ -32,9 +32,9 @@ class BasePresenter {
   void handleException(Exception e) {
     logger.severe(e.toString());
     if (e is UnauthenticatedException) {
-      showNotification("您的登录已过期，点击通知可重新登录。",
-          onTap: () =>
-              navigator().pushNamedAndRemoveUntil("/", (route) => false));
+      navigator().pushNamedAndRemoveUntil(
+          config.enableOAuth2Login ? '/oauth2_login' : '/login',
+          (route) => false);
     } else if (e is UsecaseException) {
       showMessage(e.message);
     } else {

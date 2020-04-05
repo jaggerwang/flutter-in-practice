@@ -76,6 +76,8 @@ flutter run -t lib/demo/main.dart
 flutter run -t lib/weiguan/mobile/main.dart
 ```
 
+> The video player can not work on iOS simulator, you should use an Android emulator or a real device.
+
 Weiguan app needs a api service to get and post data. It use mock apis by default, but you can configure it to use a real REST or GraphQL api service. For development purpose, you should configure and run main file `main_dev.dart`.
 
 #### Use [Sanic in Practice](https://github.com/jaggerwang/sanic-in-practice) REST api service.
@@ -107,20 +109,19 @@ Weiguan app needs a api service to get and post data. It use mock apis by defaul
 
 #### Use [Spring Cloud in Practice](https://github.com/jaggerwang/spring-cloud-in-practice) GraphQL api service.
 
-This api service only support GraphQL protocol, and it uses OAuth2 login. You should change the ports in the following steps if you run this api service by docker compose.
-
-First you need create a client for this app.
-
-```bash
-hydra --endpoint 'http://localhost:4445/' clients create --id fip --name 'Flutter in Practice' --grant-types authorization_code,refresh_token --response-types token,code --scope offline,user,post,file,stat --token-endpoint-auth-method none --callbacks 'net.jaggerwang.fip:/login/oauth2/code/hydra'
-```
-
-Then configure as following:
+This api service only support GraphQL protocol.
 
 ```dart
   final container = WgContainer(WgConfig(
     enableGraphQLApi: true,
     apiBaseUrl: 'http://localhost:8080',
+  ));
+```
+
+This api service also support OAuth2 login at branch `oauth2`, you can enable OAuth2 login as following:
+
+```dart
+  final container = WgContainer(WgConfig(
     enableOAuth2Login: true,
     oAuth2Config: OAuth2Config(
       clientId: 'fip',
@@ -132,7 +133,11 @@ Then configure as following:
   ));
 ```
 
-> The video player can not work on iOS simulator, you should use an Android emulator or a real device.
+And you need create an OAuth2 client for this app.
+
+```bash
+hydra --endpoint 'http://localhost:4445/' clients create --id fip --name 'Flutter in Practice' --grant-types authorization_code,refresh_token --response-types token,code --scope offline,user,post,file,stat --token-endpoint-auth-method none --callbacks 'net.jaggerwang.fip:/login/oauth2/code/hydra'
+```
 
 ## Screenshots
 

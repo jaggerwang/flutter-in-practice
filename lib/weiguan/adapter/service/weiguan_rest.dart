@@ -43,20 +43,24 @@ class WeiguanRestService implements WeiguanService {
         path,
         queryParameters: method == 'GET' ? data : null,
         data: method == 'POST' ? data : null,
-        options: Options(method: method),
+        options: Options(method: method, headers: headers),
       );
     } catch (e) {
-      throw ServiceException('fail', '$e');
+      if (e is DioError && e.type == DioErrorType.RESPONSE) {
+        if (e.response.statusCode == 401) {
+          throw throw UnauthenticatedException("未认证");
+        } else if (e.response.statusCode == 403) {
+          throw UnauthorizedException("未授权");
+        }
+      } else {
+        throw ServiceException('fail', '$e');
+      }
     }
     if (config.logApi) {
       logger.fine('${response.statusCode} ${response.data}');
     }
 
     var result = response.data;
-    if (response.statusCode == 401 || result['code'] == 'unauthenticated') {
-      throw UnauthenticatedException("未认证");
-    }
-
     if (result['code'] != 'ok') {
       throw ServiceException(result['code'], result['message']);
     }

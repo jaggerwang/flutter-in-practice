@@ -13,6 +13,10 @@ class UnauthenticatedException extends UsecaseException {
   UnauthenticatedException(String message) : super(message);
 }
 
+class UnauthorizedException extends UsecaseException {
+  UnauthorizedException(String message) : super(message);
+}
+
 class ServiceException extends UsecaseException {
   final String code;
 

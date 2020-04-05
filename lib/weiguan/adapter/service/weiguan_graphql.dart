@@ -35,9 +35,6 @@ class WeiguanGraphQLService implements WeiguanService {
     Response response;
     try {
       final Map<String, dynamic> headers = {};
-      // Graphql java not accept content type with charset
-      // see more on https://github.com/graphql-java/graphql-java-spring/issues/16
-      headers['content-type'] = 'application/json';
       final oAuth2State = appStore.state.oauth2;
       if (config.enableOAuth2Login && oAuth2State.accessToken != null) {
         headers['authorization'] = 'Bearer ' + oAuth2State.accessToken;
@@ -50,7 +47,15 @@ class WeiguanGraphQLService implements WeiguanService {
         options: Options(method: method, headers: headers),
       );
     } catch (e) {
-      throw ServiceException('fail', '$e');
+      if (e is DioError && e.type == DioErrorType.RESPONSE) {
+        if (e.response.statusCode == 401) {
+          throw throw UnauthenticatedException("未认证");
+        } else if (e.response.statusCode == 403) {
+          throw UnauthorizedException("未授权");
+        }
+      } else {
+        throw ServiceException('fail', '$e');
+      }
     }
     if (config.logApi) {
       logger.fine('${response.statusCode} ${response.data}');
@@ -63,11 +68,6 @@ class WeiguanGraphQLService implements WeiguanService {
       result['code'] = extensions['code'] ?? 'fail';
       result['message'] = error['message'];
     }
-
-    if (response.statusCode == 401 || result['code'] == 'unauthenticated') {
-      throw UnauthenticatedException("未认证");
-    }
-
     if (result['code'] != 'ok') {
       throw ServiceException(result['code'], result['message']);
     }
