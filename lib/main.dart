@@ -57,6 +57,8 @@ class FipApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter in Practice',
       home: HomePage(),
+      debugShowCheckedModeBanner: false,
+   
     );
   }
 }
